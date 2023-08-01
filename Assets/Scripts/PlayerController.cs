@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
         {
             rigid.AddForce(Vector3.up * jumpForce);
             isGround = false;
+            animator.SetBool("IsGround", isGround);
+            animator.CrossFade("Jump", 0.1f);
         }
     }
 
@@ -51,12 +53,20 @@ public class PlayerController : MonoBehaviour
         if(inputV != 0)
         {
             rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
+            //animator.SetBool("Move", true);
+            animator.SetFloat("MoveState", Mathf.Abs(inputV));
         }
         else
         {
             if(inputH != 0)
             {
                 rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
+                //animator.SetBool("Move", true);
+                animator.SetFloat("MoveState", Mathf.Abs(inputH));
+            }
+            else
+            {
+                //animator.SetBool("Move", false);
             }
         }
     }
@@ -68,6 +78,7 @@ public class PlayerController : MonoBehaviour
             if (collision.gameObject.CompareTag("Ground"))
             {
                 isGround = true;
+                animator.SetBool("IsGround", isGround);
             }
         }
     }
