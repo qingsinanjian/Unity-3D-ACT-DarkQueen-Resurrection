@@ -53,9 +53,9 @@ public class PlayerController : MonoBehaviour
         if(inputV != 0)
         {
             rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
-            //animator.SetBool("Move", true);
+            animator.SetBool("Move", true);
             animator.SetFloat("InputH", 0);
-            animator.SetFloat("MoveState", Mathf.Abs(inputV));
+            //animator.SetFloat("MoveState", Mathf.Abs(inputV));
             animator.SetFloat("InputV", inputV);
         }
         else
@@ -63,13 +63,13 @@ public class PlayerController : MonoBehaviour
             if(inputH != 0)
             {
                 rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
-                //animator.SetBool("Move", true);
-                animator.SetFloat("MoveState", Mathf.Abs(inputH));
+                animator.SetBool("Move", true);
+                //animator.SetFloat("MoveState", Mathf.Abs(inputH));
                 animator.SetFloat("InputH", inputH);
             }
             else
             {
-                //animator.SetBool("Move", false);
+                animator.SetBool("Move", false);
                 animator.SetFloat("InputH", 0);
                 animator.SetFloat("InputV", 0);
             }
