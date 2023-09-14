@@ -41,6 +41,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsGround", isGround);
             animator.CrossFade("Jump", 0.1f);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            animator.CrossFade("Skill1", 0.1f);
+        }
     }
 
     private void FixedUpdate()
@@ -86,5 +91,14 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("IsGround", isGround);
             }
         }
+    }
+
+    public void TestAnimationEvent(AnimationEvent animationEvent)
+    {
+        Debug.Log("Int£º" + animationEvent.intParameter);
+        Debug.Log("Float£º" + animationEvent.floatParameter);
+        Debug.Log("String£º" + animationEvent.stringParameter);
+        Debug.Log("Object£º" + animationEvent.objectReferenceParameter);
+        Debug.Log("FunctionName£º" + animationEvent.functionName);
     }
 }
