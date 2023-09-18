@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
 
     private Animator animator;
+    public GameObject shadowProjectileGo;
+    public Transform handTrans;
+    public GameObject handBall;
 
     private void Start()
     {
@@ -45,6 +48,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             animator.CrossFade("Skill1", 0.1f);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            animator.CrossFade("Skill2", 0.1f);
         }
     }
 
@@ -93,12 +100,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TestAnimationEvent(AnimationEvent animationEvent)
+    //public void TestAnimationEvent(AnimationEvent animationEvent)
+    //{
+    //    Debug.Log("Int£º" + animationEvent.intParameter);
+    //    Debug.Log("Float£º" + animationEvent.floatParameter);
+    //    Debug.Log("String£º" + animationEvent.stringParameter);
+    //    Debug.Log("Object£º" + animationEvent.objectReferenceParameter);
+    //    Debug.Log("FunctionName£º" + animationEvent.functionName);
+    //}
+
+    private void CreateShadowProjectile()
     {
-        Debug.Log("Int£º" + animationEvent.intParameter);
-        Debug.Log("Float£º" + animationEvent.floatParameter);
-        Debug.Log("String£º" + animationEvent.stringParameter);
-        Debug.Log("Object£º" + animationEvent.objectReferenceParameter);
-        Debug.Log("FunctionName£º" + animationEvent.functionName);
+        Instantiate(shadowProjectileGo, handTrans.position, transform.rotation);
+    }
+
+    private void ShowBall()
+    {
+        handBall.SetActive(true);
+    }
+
+    private void HideBall()
+    {
+        handBall.SetActive(false);
     }
 }

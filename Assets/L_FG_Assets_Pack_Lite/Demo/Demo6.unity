@@ -5571,6 +5571,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75d4ede8f2477ec40bda53b3b6b0b41b, type: 3}
+--- !u!1 &294856129 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 145700, guid: b2074e57b217b9347bbbe6a2243875bc, type: 3}
+  m_PrefabInstance: {fileID: 2061506247}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &295500325 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 780d55bf443a9c74d91bf1291263a77a, type: 3}
@@ -9489,7 +9494,7 @@ Transform:
   - {fileID: 121205004}
   - {fileID: 1205680935}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 13
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &527683157 stripped
 Transform:
@@ -9759,7 +9764,7 @@ Transform:
   - {fileID: 1700310743}
   - {fileID: 1905844650}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 113
+  m_RootOrder: 83
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &544423715
 GameObject:
@@ -11817,6 +11822,7 @@ Transform:
   - {fileID: 7728043}
   - {fileID: 57471363}
   - {fileID: 182714598}
+  - {fileID: 525290368}
   - {fileID: 1780362224}
   - {fileID: 65707481}
   - {fileID: 679665674}
@@ -11827,7 +11833,6 @@ Transform:
   - {fileID: 32002563}
   - {fileID: 1106463489}
   - {fileID: 2125570871}
-  - {fileID: 525290368}
   - {fileID: 886739580}
   - {fileID: 2123999668}
   - {fileID: 135397630}
@@ -11897,6 +11902,7 @@ Transform:
   - {fileID: 575688563}
   - {fileID: 1496427933}
   - {fileID: 227640228}
+  - {fileID: 538183002}
   - {fileID: 1623644631}
   - {fileID: 2060100710}
   - {fileID: 299114691}
@@ -11927,7 +11933,6 @@ Transform:
   - {fileID: 975561699}
   - {fileID: 1372391936}
   - {fileID: 204183018}
-  - {fileID: 538183002}
   - {fileID: 765560599}
   - {fileID: 1362984273}
   - {fileID: 1585489127}
@@ -12003,6 +12008,7 @@ Transform:
   - {fileID: 507047932}
   - {fileID: 913587066}
   - {fileID: 1347060012}
+  - {fileID: 1002946165}
   - {fileID: 295500325}
   - {fileID: 279926549}
   - {fileID: 1494352378}
@@ -12027,7 +12033,6 @@ Transform:
   - {fileID: 598506880}
   - {fileID: 1201080370}
   - {fileID: 1195476687}
-  - {fileID: 1002946165}
   - {fileID: 1707327831}
   - {fileID: 1805600075}
   - {fileID: 314267329}
@@ -12109,6 +12114,7 @@ Transform:
   - {fileID: 1047607687}
   - {fileID: 68299754}
   - {fileID: 1671204498}
+  - {fileID: 1410279288}
   - {fileID: 1045195872}
   - {fileID: 941319682}
   - {fileID: 1440291084}
@@ -12127,7 +12133,6 @@ Transform:
   - {fileID: 988790972}
   - {fileID: 674043594}
   - {fileID: 1579682987}
-  - {fileID: 1410279288}
   - {fileID: 2141483966}
   - {fileID: 608503089}
   - {fileID: 660332264}
@@ -12215,6 +12220,7 @@ Transform:
   - {fileID: 407920292}
   - {fileID: 1576693857}
   - {fileID: 303486115}
+  - {fileID: 1678463287}
   - {fileID: 1295372352}
   - {fileID: 1557213349}
   - {fileID: 83417631}
@@ -12227,7 +12233,6 @@ Transform:
   - {fileID: 2041505448}
   - {fileID: 1616059566}
   - {fileID: 434696808}
-  - {fileID: 1678463287}
   - {fileID: 1268881126}
   - {fileID: 531968019}
   - {fileID: 1246217248}
@@ -12321,13 +12326,13 @@ Transform:
   - {fileID: 1631638483}
   - {fileID: 1719666316}
   - {fileID: 549348202}
+  - {fileID: 2060827410}
   - {fileID: 985515810}
   - {fileID: 1506396097}
   - {fileID: 297660501}
   - {fileID: 1626873956}
   - {fileID: 1245784773}
   - {fileID: 1630763902}
-  - {fileID: 2060827410}
   - {fileID: 324347203}
   - {fileID: 428208160}
   - {fileID: 1743746553}
@@ -24770,7 +24775,7 @@ Transform:
   m_Children:
   - {fileID: 180483276}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 213
+  m_RootOrder: 189
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1004032163
 PrefabInstance:
@@ -27221,6 +27226,9 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 90
   jumpForce: 500
+  shadowProjectileGo: {fileID: 520356795528877521, guid: 142a1d0e90d652641afda78012284298, type: 3}
+  handTrans: {fileID: 840538417}
+  handBall: {fileID: 294856129}
 --- !u!136 &1125934354
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -33494,7 +33502,7 @@ Transform:
   m_Children:
   - {fileID: 1492299236}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 313
+  m_RootOrder: 295
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1410440292
 PrefabInstance:
@@ -39246,7 +39254,7 @@ Transform:
   m_Children:
   - {fileID: 1336554310}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 413
+  m_RootOrder: 401
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1680596136 stripped
 Transform:
@@ -48120,7 +48128,7 @@ Transform:
   m_Children:
   - {fileID: 732666552}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 513
+  m_RootOrder: 507
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2060827411
 MeshRenderer:

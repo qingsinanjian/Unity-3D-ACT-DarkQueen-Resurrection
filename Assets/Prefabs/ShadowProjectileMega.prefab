@@ -5032,6 +5032,7 @@ GameObject:
   - component: {fileID: 520356795509098545}
   - component: {fileID: 520356795510202671}
   - component: {fileID: 520356795528877520}
+  - component: {fileID: -827687738947661601}
   m_Layer: 0
   m_Name: ShadowProjectileMega
   m_TagString: Untagged
@@ -9821,6 +9822,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.223
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-827687738947661601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520356795528877521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d775aa81368cb0147b89a15d93e69ac8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 10
 --- !u!1 &520356795528884853
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,6 @@ public class ShadowProjectilMega : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(transform.forward * moveSpeed * Time.deltaTime);
+        transform.Translate(transform.forward * moveSpeed * Time.deltaTime, Space.World);
     }
 }
