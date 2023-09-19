@@ -16,9 +16,14 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
 
     private Animator animator;
+
+    //°µÓ°Ä§·¨Çò
     public GameObject shadowProjectileGo;
-    public Transform handTrans;
+    public Transform leftHandTrans;
     public GameObject handBall;
+    //°µÓ°Õ¶»÷
+    public GameObject slashEffectGo;
+    public Transform rightHandTrans;
 
     private void Start()
     {
@@ -111,7 +116,7 @@ public class PlayerController : MonoBehaviour
 
     private void CreateShadowProjectile()
     {
-        Instantiate(shadowProjectileGo, handTrans.position, transform.rotation);
+        Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
     }
 
     private void ShowBall()
@@ -122,5 +127,10 @@ public class PlayerController : MonoBehaviour
     private void HideBall()
     {
         handBall.SetActive(false);
+    }
+
+    private void PlayParticals()
+    {
+        Instantiate(slashEffectGo, leftHandTrans.position, Quaternion.Euler(transform.eulerAngles));
     }
 }
