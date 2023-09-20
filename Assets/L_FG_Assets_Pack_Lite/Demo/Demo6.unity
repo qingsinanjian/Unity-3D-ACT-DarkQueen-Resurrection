@@ -9764,7 +9764,7 @@ Transform:
   - {fileID: 1700310743}
   - {fileID: 1905844650}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 73
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &544423715
 GameObject:
@@ -11832,6 +11832,7 @@ Transform:
   - {fileID: 395383693}
   - {fileID: 32002563}
   - {fileID: 1106463489}
+  - {fileID: 538183002}
   - {fileID: 2125570871}
   - {fileID: 886739580}
   - {fileID: 2123999668}
@@ -11892,7 +11893,6 @@ Transform:
   - {fileID: 784781057}
   - {fileID: 1628917732}
   - {fileID: 1096291061}
-  - {fileID: 538183002}
   - {fileID: 372475106}
   - {fileID: 1586837550}
   - {fileID: 1299350005}
@@ -11952,6 +11952,7 @@ Transform:
   - {fileID: 153174967}
   - {fileID: 1820190343}
   - {fileID: 452204121}
+  - {fileID: 1002946165}
   - {fileID: 844034012}
   - {fileID: 974355782}
   - {fileID: 764994398}
@@ -12000,7 +12001,6 @@ Transform:
   - {fileID: 1147851070}
   - {fileID: 134795561}
   - {fileID: 1902362152}
-  - {fileID: 1002946165}
   - {fileID: 847820099}
   - {fileID: 1163597023}
   - {fileID: 355848983}
@@ -12072,6 +12072,7 @@ Transform:
   - {fileID: 1540715725}
   - {fileID: 1607057338}
   - {fileID: 1709076217}
+  - {fileID: 1410279288}
   - {fileID: 1272016812}
   - {fileID: 1868234654}
   - {fileID: 1391597667}
@@ -12108,7 +12109,6 @@ Transform:
   - {fileID: 1143861968}
   - {fileID: 2129314747}
   - {fileID: 1223486542}
-  - {fileID: 1410279288}
   - {fileID: 1519388867}
   - {fileID: 94183770}
   - {fileID: 587274751}
@@ -12192,6 +12192,7 @@ Transform:
   - {fileID: 527683157}
   - {fileID: 602474762}
   - {fileID: 2034267651}
+  - {fileID: 1678463287}
   - {fileID: 480817094}
   - {fileID: 1251898936}
   - {fileID: 1332146657}
@@ -12216,7 +12217,6 @@ Transform:
   - {fileID: 2041472218}
   - {fileID: 1085386947}
   - {fileID: 899649446}
-  - {fileID: 1678463287}
   - {fileID: 969479323}
   - {fileID: 407920292}
   - {fileID: 1576693857}
@@ -12312,6 +12312,7 @@ Transform:
   - {fileID: 38949188}
   - {fileID: 43106402}
   - {fileID: 283418608}
+  - {fileID: 2060827410}
   - {fileID: 2125415075}
   - {fileID: 43527400}
   - {fileID: 1433265000}
@@ -12324,7 +12325,6 @@ Transform:
   - {fileID: 310803956}
   - {fileID: 648159367}
   - {fileID: 1631638483}
-  - {fileID: 2060827410}
   - {fileID: 1719666316}
   - {fileID: 549348202}
   - {fileID: 985515810}
@@ -24775,7 +24775,7 @@ Transform:
   m_Children:
   - {fileID: 180483276}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 181
+  m_RootOrder: 133
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1004032163
 PrefabInstance:
@@ -27231,6 +27231,7 @@ MonoBehaviour:
   handBall: {fileID: 294856129}
   slashEffectGo: {fileID: 7285477479942169128, guid: 1e92b16087a45d24a8c3d6979b1073e0, type: 3}
   rightHandTrans: {fileID: 1125934358}
+  cleaveEffectGo: {fileID: 167926, guid: 1ededa2e5f5650d48978cca088b4e47b, type: 3}
 --- !u!136 &1125934354
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -33509,7 +33510,7 @@ Transform:
   m_Children:
   - {fileID: 1492299236}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 289
+  m_RootOrder: 253
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1410440292
 PrefabInstance:
@@ -39261,7 +39262,7 @@ Transform:
   m_Children:
   - {fileID: 1336554310}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 397
+  m_RootOrder: 373
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1680596136 stripped
 Transform:
@@ -48135,7 +48136,7 @@ Transform:
   m_Children:
   - {fileID: 732666552}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 505
+  m_RootOrder: 493
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2060827411
 MeshRenderer:

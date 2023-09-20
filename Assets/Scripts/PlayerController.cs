@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     //°µÓ°Õ¶»÷
     public GameObject slashEffectGo;
     public Transform rightHandTrans;
+    //°µÓ°³å»÷
+    public GameObject cleaveEffectGo;
 
     private void Start()
     {
@@ -57,6 +59,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             animator.CrossFade("Skill2", 0.1f);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            animator.CrossFade("Skill3", 0.1f);
         }
     }
 
@@ -114,6 +120,7 @@ public class PlayerController : MonoBehaviour
     //    Debug.Log("FunctionName£º" + animationEvent.functionName);
     //}
 
+    #region °µÓ°Ä§·¨Çò
     private void CreateShadowProjectile()
     {
         Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
@@ -129,8 +136,22 @@ public class PlayerController : MonoBehaviour
         handBall.SetActive(false);
     }
 
-    private void PlayParticals()
+    #endregion
+
+    #region °µÓ°Õ¶
+    private void PlaySlashParticals()
     {
-        Instantiate(slashEffectGo, leftHandTrans.position, Quaternion.Euler(transform.eulerAngles));
+        Instantiate(slashEffectGo, transform.position + new Vector3(transform.forward.x, transform.forward.y + 1.3f, transform.forward.z * 1.3f), transform.rotation);
     }
+
+    #endregion
+
+    #region °µÓ°³å»÷
+
+    private void PlayCleaveParticals()
+    {
+        Instantiate(cleaveEffectGo, transform.position + transform.forward, transform.rotation);
+    }
+
+    #endregion
 }
