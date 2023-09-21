@@ -52,18 +52,19 @@ public class PlayerController : MonoBehaviour
             animator.CrossFade("Jump", 0.1f);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            animator.CrossFade("Skill1", 0.1f);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            animator.CrossFade("Skill2", 0.1f);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            animator.CrossFade("Skill3", 0.1f);
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    animator.CrossFade("Skill1", 0.1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    animator.CrossFade("Skill2", 0.1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    animator.CrossFade("Skill3", 0.1f);
+        //}
+        GetPlayerSkillInput();
     }
 
     private void FixedUpdate()
@@ -154,4 +155,15 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
+
+    private void GetPlayerSkillInput()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            if(Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                animator.CrossFade("Skill" + i, 0.1f);
+            }
+        }
+    }
 }
