@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public Transform rightHandTrans;
     //做荌喳僻
     public GameObject cleaveEffectGo;
+    //做荌誘嗎
+    public GameObject shadowShieldGo;
 
     private void Start()
     {
@@ -154,6 +156,14 @@ public class PlayerController : MonoBehaviour
         Instantiate(cleaveEffectGo, transform.position + transform.forward, transform.rotation);
     }
 
+    #endregion
+
+    #region 做荌誘嗎
+    private void CreateShadowShield()
+    {
+        GameObject itemGo = Instantiate(shadowShieldGo, transform.position, transform.rotation);
+        itemGo.transform.SetParent(transform);
+    }
     #endregion
 
     private void GetPlayerSkillInput()
