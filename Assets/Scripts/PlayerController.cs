@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
     //°µÓ°Ä§·¨Çò
     public GameObject shadowProjectileGo;
     public Transform leftHandTrans;
-    public GameObject handBall;
+    public GameObject leftHandBall;
+    public GameObject rightHandBall;
     //°µÓ°Õ¶»÷
     public GameObject slashEffectGo;
     public Transform rightHandTrans;
@@ -124,19 +125,42 @@ public class PlayerController : MonoBehaviour
     //}
 
     #region °µÓ°Ä§·¨Çò
-    private void CreateShadowProjectile()
+    private void CreateShadowProjectile(int isLeft)
     {
-        Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
+        if(isLeft == 1)
+        {
+            Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
+        }
+        else
+        {
+            Instantiate(shadowProjectileGo, rightHandTrans.position, transform.rotation);
+        }
     }
 
-    private void ShowBall()
+    private void ShowBall(int isLeft)
     {
-        handBall.SetActive(true);
+        if (isLeft == 1)
+        {
+            leftHandBall.SetActive(true);
+
+        }
+        else
+        {
+            rightHandBall.SetActive(true);
+        }
     }
 
-    private void HideBall()
+    private void HideBall(int isLeft)
     {
-        handBall.SetActive(false);
+        if (isLeft == 1)
+        {
+            leftHandBall.SetActive(false);
+
+        }
+        else
+        {
+            rightHandBall.SetActive(false);
+        }
     }
 
     #endregion
