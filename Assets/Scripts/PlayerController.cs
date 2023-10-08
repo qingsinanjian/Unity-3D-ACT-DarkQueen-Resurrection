@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     //°µÓ°»¤¶Ü
     public GameObject shadowShieldGo;
 
+    public GameObject bigShadowProjectileGo;
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -200,4 +201,11 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    #region °µÓ°ºä»÷
+    private void CreateBigShadowProjectile()
+    {
+        Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
+    }
+    #endregion
 }

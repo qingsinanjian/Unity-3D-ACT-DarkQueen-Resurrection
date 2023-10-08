@@ -11924,11 +11924,11 @@ Transform:
   - {fileID: 384409411}
   - {fileID: 492881518}
   - {fileID: 558147800}
+  - {fileID: 1002946165}
   - {fileID: 698140552}
   - {fileID: 1680596136}
   - {fileID: 1979150319}
   - {fileID: 2048684761}
-  - {fileID: 1002946165}
   - {fileID: 2066146273}
   - {fileID: 1144175359}
   - {fileID: 975561699}
@@ -12051,10 +12051,10 @@ Transform:
   - {fileID: 1761800994}
   - {fileID: 1960348651}
   - {fileID: 27047518}
+  - {fileID: 1410279288}
   - {fileID: 1705972004}
   - {fileID: 2009731017}
   - {fileID: 2057833874}
-  - {fileID: 1410279288}
   - {fileID: 1182942114}
   - {fileID: 524803919}
   - {fileID: 914195970}
@@ -12178,9 +12178,9 @@ Transform:
   - {fileID: 860504097}
   - {fileID: 1947336222}
   - {fileID: 1984135435}
+  - {fileID: 1678463287}
   - {fileID: 1726115331}
   - {fileID: 548936460}
-  - {fileID: 1678463287}
   - {fileID: 1951674531}
   - {fileID: 1108463299}
   - {fileID: 1791908923}
@@ -12305,8 +12305,8 @@ Transform:
   - {fileID: 1130151661}
   - {fileID: 189841188}
   - {fileID: 1376818261}
-  - {fileID: 2130140635}
   - {fileID: 2060827410}
+  - {fileID: 2130140635}
   - {fileID: 1295224597}
   - {fileID: 1818885078}
   - {fileID: 684223616}
@@ -24841,7 +24841,7 @@ Transform:
   m_Children:
   - {fileID: 180483276}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 109
+  m_RootOrder: 105
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1004032163
 PrefabInstance:
@@ -27300,6 +27300,7 @@ MonoBehaviour:
   rightHandTrans: {fileID: 1125934358}
   cleaveEffectGo: {fileID: 167926, guid: 1ededa2e5f5650d48978cca088b4e47b, type: 3}
   shadowShieldGo: {fileID: 100000, guid: dc615a12cdfd5d34ca9cbafb5cc68a34, type: 3}
+  bigShadowProjectileGo: {fileID: 350981592022452769, guid: 9397b3035974e5d4295b827ec4f47776, type: 3}
 --- !u!136 &1125934354
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -33578,7 +33579,7 @@ Transform:
   m_Children:
   - {fileID: 1492299236}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 235
+  m_RootOrder: 232
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1410440292
 PrefabInstance:
@@ -39330,7 +39331,7 @@ Transform:
   m_Children:
   - {fileID: 1336554310}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 361
+  m_RootOrder: 359
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1680596136 stripped
 Transform:
@@ -48204,7 +48205,7 @@ Transform:
   m_Children:
   - {fileID: 732666552}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 487
+  m_RootOrder: 486
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2060827411
 MeshRenderer:
