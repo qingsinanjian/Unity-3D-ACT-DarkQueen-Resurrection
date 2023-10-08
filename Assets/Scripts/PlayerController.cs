@@ -29,12 +29,16 @@ public class PlayerController : MonoBehaviour
     public GameObject cleaveEffectGo;
     //暗影护盾
     public GameObject shadowShieldGo;
-
+    //暗影轰击
     public GameObject bigShadowProjectileGo;
+    //变身特效
+    public ParticleSystem transfigurationEffect;
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        transfigurationEffect.Stop();
+        transfigurationEffect.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -54,6 +58,11 @@ public class PlayerController : MonoBehaviour
             isGround = false;
             animator.SetBool("IsGround", isGround);
             animator.CrossFade("Jump", 0.1f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            animator.CrossFade("Transfiguration", 0.1f);
         }
 
         //if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -206,6 +215,22 @@ public class PlayerController : MonoBehaviour
     private void CreateBigShadowProjectile()
     {
         Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
+    }
+    #endregion
+
+    #region 变身
+    private void PlayTransfigurationEffect(int show)
+    {
+        bool state = System.Convert.ToBoolean(show);
+        if (state)
+        {
+            transfigurationEffect.gameObject.SetActive(true);
+            transfigurationEffect.Play();
+        }
+        else
+        {
+            transfigurationEffect.Stop();
+        }
     }
     #endregion
 }
