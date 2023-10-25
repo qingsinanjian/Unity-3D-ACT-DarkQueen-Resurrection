@@ -11888,6 +11888,7 @@ Transform:
   - {fileID: 1368959642}
   - {fileID: 551039891}
   - {fileID: 1660712017}
+  - {fileID: 1002946165}
   - {fileID: 2038825959}
   - {fileID: 83038915}
   - {fileID: 784781057}
@@ -11908,7 +11909,6 @@ Transform:
   - {fileID: 299114691}
   - {fileID: 1277170975}
   - {fileID: 841307292}
-  - {fileID: 1002946165}
   - {fileID: 180424605}
   - {fileID: 1127982074}
   - {fileID: 96936112}
@@ -12024,6 +12024,7 @@ Transform:
   - {fileID: 534220647}
   - {fileID: 336141164}
   - {fileID: 1215677147}
+  - {fileID: 1410279288}
   - {fileID: 92775695}
   - {fileID: 730133857}
   - {fileID: 993580849}
@@ -12039,7 +12040,6 @@ Transform:
   - {fileID: 1629719617}
   - {fileID: 299276129}
   - {fileID: 943535282}
-  - {fileID: 1410279288}
   - {fileID: 165049284}
   - {fileID: 1151651656}
   - {fileID: 207383237}
@@ -12160,6 +12160,7 @@ Transform:
   - {fileID: 796840535}
   - {fileID: 305096351}
   - {fileID: 333750601}
+  - {fileID: 1678463287}
   - {fileID: 551641922}
   - {fileID: 245448458}
   - {fileID: 1507091689}
@@ -12170,7 +12171,6 @@ Transform:
   - {fileID: 686347080}
   - {fileID: 704909929}
   - {fileID: 1498420788}
-  - {fileID: 1678463287}
   - {fileID: 1647653623}
   - {fileID: 610091866}
   - {fileID: 1741322910}
@@ -12296,12 +12296,12 @@ Transform:
   - {fileID: 723749416}
   - {fileID: 1525496326}
   - {fileID: 1810593637}
+  - {fileID: 2060827410}
   - {fileID: 784952617}
   - {fileID: 1289340891}
   - {fileID: 1046048476}
   - {fileID: 1481731245}
   - {fileID: 623342786}
-  - {fileID: 2060827410}
   - {fileID: 1700140104}
   - {fileID: 1130151661}
   - {fileID: 189841188}
@@ -24846,7 +24846,7 @@ Transform:
   m_Children:
   - {fileID: 180483276}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 89
+  m_RootOrder: 69
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1004032163
 PrefabInstance:
@@ -27297,16 +27297,26 @@ MonoBehaviour:
   moveSpeed: 3
   rotateSpeed: 90
   jumpForce: 500
+  sr: {fileID: 1125934359}
+  transEffect: {fileID: 2968290831011254305, guid: c6ad8a9daa0451c408a547e3f8426403, type: 3}
   shadowProjectileGo: {fileID: 520356795528877521, guid: 142a1d0e90d652641afda78012284298, type: 3}
   leftHandTrans: {fileID: 840538417}
   leftHandBall: {fileID: 294856129}
   rightHandBall: {fileID: 851253514}
   slashEffectGo: {fileID: 7285477479942169128, guid: 1e92b16087a45d24a8c3d6979b1073e0, type: 3}
   rightHandTrans: {fileID: 1125934358}
-  cleaveEffectGo: {fileID: 167926, guid: 1ededa2e5f5650d48978cca088b4e47b, type: 3}
-  shadowShieldGo: {fileID: 100000, guid: dc615a12cdfd5d34ca9cbafb5cc68a34, type: 3}
+  cleaveEffectGo: {fileID: 8622227285320014330, guid: 5e1bf69d64a251e47baa438f53470ba9, type: 3}
+  shadowShieldGo: {fileID: 1347451334456818962, guid: 2271e0bd4e278674a82180fee476e489, type: 3}
   bigShadowProjectileGo: {fileID: 350981592022452769, guid: 9397b3035974e5d4295b827ec4f47776, type: 3}
   transfigurationEffect: {fileID: 795409247}
+  masterMaterials:
+  - {fileID: 2100000, guid: a2fa1990d06d9eb4a8e274c18b642246, type: 2}
+  - {fileID: 2100000, guid: dc30d0f173c2c674091d33a2f0b74d1f, type: 2}
+  masterRA: {fileID: 22100000, guid: e49cbc862e4223445b509162c4983364, type: 2}
+  blademanMaterials:
+  - {fileID: 2100000, guid: d28a4eedad2b73b4d80756f21e2677d3, type: 2}
+  - {fileID: 2100000, guid: e1efdadb20b8fc24fb96b543fc7db3c6, type: 2}
+  blademanRA: {fileID: 9100000, guid: de021c4433e88ec4f8f2fc4bf7d1e3ec, type: 2}
 --- !u!136 &1125934354
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -27357,6 +27367,11 @@ ConstantForce:
 --- !u!4 &1125934358 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1827629865255471190, guid: 2b95b8c937251bf4a862469a23da16b2, type: 3}
+  m_PrefabInstance: {fileID: 1125934350}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1125934359 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1827629865258817888, guid: 2b95b8c937251bf4a862469a23da16b2, type: 3}
   m_PrefabInstance: {fileID: 1125934350}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1127800750
@@ -33666,7 +33681,7 @@ Transform:
   m_Children:
   - {fileID: 1492299236}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 220
+  m_RootOrder: 205
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1410440292
 PrefabInstance:
@@ -39418,7 +39433,7 @@ Transform:
   m_Children:
   - {fileID: 1336554310}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 351
+  m_RootOrder: 341
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1680596136 stripped
 Transform:
@@ -48292,7 +48307,7 @@ Transform:
   m_Children:
   - {fileID: 732666552}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 482
+  m_RootOrder: 477
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2060827411
 MeshRenderer:

@@ -17,22 +17,10 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
-    //暗影魔法球
-    public GameObject shadowProjectileGo;
-    public Transform leftHandTrans;
-    public GameObject leftHandBall;
-    public GameObject rightHandBall;
-    //暗影斩击
-    public GameObject slashEffectGo;
-    public Transform rightHandTrans;
-    //暗影冲击
-    public GameObject cleaveEffectGo;
-    //暗影护盾
-    public GameObject shadowShieldGo;
-    //暗影轰击
-    public GameObject bigShadowProjectileGo;
-    //变身特效
-    public ParticleSystem transfigurationEffect;
+    private State currentState;
+    public SkinnedMeshRenderer sr;
+    public GameObject transEffect;
+    
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -134,6 +122,26 @@ public class PlayerController : MonoBehaviour
     //    Debug.Log("FunctionName：" + animationEvent.functionName);
     //}
 
+    #region Biomech_Master
+    //暗影魔法球
+    public GameObject shadowProjectileGo;
+    public Transform leftHandTrans;
+    public GameObject leftHandBall;
+    public GameObject rightHandBall;
+    //暗影斩击
+    public GameObject slashEffectGo;
+    public Transform rightHandTrans;
+    //暗影冲击
+    public GameObject cleaveEffectGo;
+    //暗影护盾
+    public GameObject shadowShieldGo;
+    //暗影轰击
+    public GameObject bigShadowProjectileGo;
+    //变身特效
+    public ParticleSystem transfigurationEffect;
+    public Material[] masterMaterials;
+    public RuntimeAnimatorController masterRA;
+
     #region 暗影魔法球
     private void CreateShadowProjectile(int isLeft)
     {
@@ -200,6 +208,21 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region 暗影轰击
+    private void CreateBigShadowProjectile()
+    {
+        Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
+    }
+    #endregion
+
+    #endregion
+
+    #region Biomech_Blademan
+    public Material[] blademanMaterials;
+    public RuntimeAnimatorController blademanRA;
+
+    #endregion
+
     private void GetPlayerSkillInput()
     {
         for (int i = 0; i < 10; i++)
@@ -210,13 +233,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-    #region 暗影轰击
-    private void CreateBigShadowProjectile()
-    {
-        Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
-    }
-    #endregion
 
     #region 变身
     private void PlayTransfigurationEffect(int show)
@@ -230,7 +246,50 @@ public class PlayerController : MonoBehaviour
         else
         {
             transfigurationEffect.Stop();
+            Instantiate(transEffect, transform.position, Quaternion.identity);
+        }
+    }
+
+    private void ChangeStateProperties()
+    {
+        currentState++;
+        if(System.Convert.ToInt32(currentState) > 1)
+        {
+            currentState = State.Master;
+        }
+        switch (currentState)
+        {
+            case State.Master:
+                ChangeMaterials(masterMaterials);
+                animator.runtimeAnimatorController = masterRA;
+                break;
+            case State.Blademan:
+                ChangeMaterials(blademanMaterials);
+                animator.runtimeAnimatorController = blademanRA;
+                break;
+            case State.Swordman:
+                break;
+            case State.Assassin:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ChangeMaterials(Material[] materials)
+    {
+        for (int i = 0; i < materials.Length; i++)
+        {
+            sr.materials[i].CopyPropertiesFromMaterial(materials[i]);
         }
     }
     #endregion
+}
+
+public enum State
+{
+    Master,
+    Blademan,
+    Swordman,
+    Assassin
 }
