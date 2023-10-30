@@ -42,6 +42,40 @@ public class PlayerController : MonoBehaviour
     public Material[] masterMaterials;
     public RuntimeAnimatorController masterRA;
 
+    #region 事件函数
+    private void Start()
+    {
+        rigid = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        transfigurationEffect.Stop();
+        transfigurationEffect.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        PlayerInput();
+        Jump();
+        GetPlayerSkillInput();
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!isGround)
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                isGround = true;
+                animator.SetBool("IsGround", isGround);
+            }
+        }
+    }
+    #endregion
+
     #region 暗影魔法球
     private void CreateShadowProjectile(int isLeft)
     {
@@ -124,12 +158,13 @@ public class PlayerController : MonoBehaviour
     public bool ifEquip;
     public GameObject equipBladeGo;
     public GameObject unEquipBladeGo;
-    private bool startCombo;
+    private bool startCombo = false;
     public ParticleSystem leftHitBallPS;
     public ParticleSystem rightHitBallPS;
     public GameObject bladeGo;
     public GameObject darkBladeGo;
     public ParticleSystem changeBladeEffect;
+    public int moveScale = 1;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -205,21 +240,21 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    private void Start()
-    {
-        rigid = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        transfigurationEffect.Stop();
-        transfigurationEffect.gameObject.SetActive(false);
-    }
-
     /// <summary>
     /// 玩家输入
     /// </summary>
     private void PlayerInput()
     {
-        inputH = Input.GetAxis("Horizontal");
-        inputV = Input.GetAxis("Vertical");
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            moveScale = 2;
+        }
+        else
+        {
+            moveScale = 1;
+        }
+        inputH = Input.GetAxis("Horizontal") * moveScale;
+        inputV = Input.GetAxis("Vertical") * moveScale;
         if (inputH != 0 && inputV != 0)
         {
             float targetRotation = rotateSpeed * inputH;
@@ -236,6 +271,7 @@ public class PlayerController : MonoBehaviour
         {
             ifEquip = !ifEquip;
             animator.SetBool("Equip", ifEquip);
+            startCombo = false;
         }
 
         if (ifEquip)
@@ -273,14 +309,6 @@ public class PlayerController : MonoBehaviour
                 animator.CrossFade("JumpA", 0.1f);
             }
         }
-
-    }
-
-    private void Update()
-    {
-        PlayerInput();
-        Jump();
-        GetPlayerSkillInput();
     }
 
     /// <summary>
@@ -315,23 +343,6 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("Move", false);
                 animator.SetFloat("InputH", 0);
                 animator.SetFloat("InputV", 0);
-            }
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!isGround)
-        {
-            if (collision.gameObject.CompareTag("Ground"))
-            {
-                isGround = true;
-                animator.SetBool("IsGround", isGround);
             }
         }
     }

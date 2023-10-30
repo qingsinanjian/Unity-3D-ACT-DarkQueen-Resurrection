@@ -21498,6 +21498,7 @@ Transform:
   - {fileID: 525290368}
   - {fileID: 538183002}
   - {fileID: 1002946165}
+  - {fileID: 1410279288}
   - {fileID: 1780362224}
   - {fileID: 65707481}
   - {fileID: 679665674}
@@ -21556,7 +21557,6 @@ Transform:
   - {fileID: 643029349}
   - {fileID: 522452157}
   - {fileID: 154722712}
-  - {fileID: 1410279288}
   - {fileID: 15799879}
   - {fileID: 1481313666}
   - {fileID: 2022108437}
@@ -21683,6 +21683,7 @@ Transform:
   - {fileID: 507047932}
   - {fileID: 913587066}
   - {fileID: 1347060012}
+  - {fileID: 1678463287}
   - {fileID: 295500325}
   - {fileID: 279926549}
   - {fileID: 1494352378}
@@ -21739,7 +21740,6 @@ Transform:
   - {fileID: 75927058}
   - {fileID: 84700733}
   - {fileID: 269008181}
-  - {fileID: 1678463287}
   - {fileID: 2007830124}
   - {fileID: 2069941197}
   - {fileID: 1328719716}
@@ -21894,6 +21894,7 @@ Transform:
   - {fileID: 407920292}
   - {fileID: 1576693857}
   - {fileID: 303486115}
+  - {fileID: 2060827410}
   - {fileID: 1295372352}
   - {fileID: 1557213349}
   - {fileID: 83417631}
@@ -21922,7 +21923,6 @@ Transform:
   - {fileID: 1548984382}
   - {fileID: 766993326}
   - {fileID: 634439893}
-  - {fileID: 2060827410}
   - {fileID: 1866901286}
   - {fileID: 2005494973}
   - {fileID: 1287090514}
@@ -37021,7 +37021,7 @@ Animator:
   m_GameObject: {fileID: 1827629864130801860}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 655a837a2979acd49b85d1a0401fc0aa, type: 3}
-  m_Controller: {fileID: 9100000, guid: de021c4433e88ec4f8f2fc4bf7d1e3ec, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1d29a17501e15cd4d820124b16d743d3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -37065,7 +37065,7 @@ MonoBehaviour:
   blademanMaterials:
   - {fileID: 2100000, guid: d28a4eedad2b73b4d80756f21e2677d3, type: 2}
   - {fileID: 2100000, guid: e1efdadb20b8fc24fb96b543fc7db3c6, type: 2}
-  blademanRA: {fileID: 9100000, guid: de021c4433e88ec4f8f2fc4bf7d1e3ec, type: 2}
+  blademanRA: {fileID: 9100000, guid: 1d29a17501e15cd4d820124b16d743d3, type: 2}
   ifEquip: 0
   equipBladeGo: {fileID: 1835736736}
   unEquipBladeGo: {fileID: 925075798}
@@ -37074,6 +37074,7 @@ MonoBehaviour:
   bladeGo: {fileID: 1835736736}
   darkBladeGo: {fileID: 1490875798}
   changeBladeEffect: {fileID: 619296337}
+  moveScale: 0
 --- !u!136 &1125934354
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -48295,7 +48296,7 @@ Transform:
   m_Children:
   - {fileID: 1492299236}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 64
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1410440292
 PrefabInstance:
@@ -54052,7 +54053,7 @@ Transform:
   m_Children:
   - {fileID: 1336554310}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 247
+  m_RootOrder: 191
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1680596136 stripped
 Transform:
@@ -63002,7 +63003,7 @@ Transform:
   m_Children:
   - {fileID: 732666552}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 430
+  m_RootOrder: 402
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2060827411
 MeshRenderer:
