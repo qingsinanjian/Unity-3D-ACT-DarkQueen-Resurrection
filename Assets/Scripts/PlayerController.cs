@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public GameObject transEffect;
 
     #region Biomech_Master
+    [Header("*************Biomech_Master*************")]
     //°µÓ°Ä§·¨Çò
     public GameObject shadowProjectileGo;
     public Transform leftHandTrans;
@@ -117,6 +118,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Biomech_Blademan
+    [Header("*************Biomech_Blademan*************")]
     public Material[] blademanMaterials;
     public RuntimeAnimatorController blademanRA;
     public bool ifEquip;
@@ -125,6 +127,9 @@ public class PlayerController : MonoBehaviour
     private bool startCombo;
     public ParticleSystem leftHitBallPS;
     public ParticleSystem rightHitBallPS;
+    public GameObject bladeGo;
+    public GameObject darkBladeGo;
+    public ParticleSystem changeBladeEffect;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -179,6 +184,23 @@ public class PlayerController : MonoBehaviour
         {
             rightHitBallPS.Stop();
         }
+    }
+
+    private void ShowOrHideBlade(AnimationEvent animationEvent)
+    {
+        if(animationEvent.intParameter == 0)
+        {
+            bladeGo.SetActive(System.Convert.ToBoolean(animationEvent.stringParameter));
+        }
+        else
+        {
+            darkBladeGo.SetActive(System.Convert.ToBoolean(animationEvent.stringParameter));
+        }
+    }
+
+    private void PlayChangeBladeEffect()
+    {
+        changeBladeEffect.Play();
     }
 
     #endregion
