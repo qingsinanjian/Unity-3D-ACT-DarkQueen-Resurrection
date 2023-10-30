@@ -17,110 +17,9 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
-    private State currentState;
+    public State currentState;
     public SkinnedMeshRenderer sr;
     public GameObject transEffect;
-    
-    private void Start()
-    {
-        rigid = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        transfigurationEffect.Stop();
-        transfigurationEffect.gameObject.SetActive(false);
-    }
-
-    private void Update()
-    {
-        inputH = Input.GetAxis("Horizontal");
-        inputV = Input.GetAxis("Vertical");
-        if(inputH != 0 && inputV != 0)
-        {
-            float targetRotation = rotateSpeed * inputH;
-            transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
-        }
-        //inputDir = new Vector3(inputH, 0, inputV);
-
-        if(Input.GetKeyDown(KeyCode.Space) && isGround)
-        {
-            rigid.AddForce(Vector3.up * jumpForce);
-            isGround = false;
-            animator.SetBool("IsGround", isGround);
-            animator.CrossFade("Jump", 0.1f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            animator.CrossFade("Transfiguration", 0.1f);
-        }
-
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    animator.CrossFade("Skill1", 0.1f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    animator.CrossFade("Skill2", 0.1f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //    animator.CrossFade("Skill3", 0.1f);
-        //}
-        GetPlayerSkillInput();
-    }
-
-    private void FixedUpdate()
-    {
-        //if (inputH != 0 || inputV != 0)
-        //{
-        //    rigid.MovePosition(transform.position + transform.TransformDirection(inputDir) * Time.deltaTime * moveSpeed);
-        //}
-
-        if(inputV != 0)
-        {
-            rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
-            animator.SetBool("Move", true);
-            animator.SetFloat("InputH", 0);
-            //animator.SetFloat("MoveState", Mathf.Abs(inputV));
-            animator.SetFloat("InputV", inputV);
-        }
-        else
-        {
-            if(inputH != 0)
-            {
-                rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
-                animator.SetBool("Move", true);
-                //animator.SetFloat("MoveState", Mathf.Abs(inputH));
-                animator.SetFloat("InputH", inputH);
-            }
-            else
-            {
-                animator.SetBool("Move", false);
-                animator.SetFloat("InputH", 0);
-                animator.SetFloat("InputV", 0);
-            }
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!isGround)
-        {
-            if (collision.gameObject.CompareTag("Ground"))
-            {
-                isGround = true;
-                animator.SetBool("IsGround", isGround);
-            }
-        }
-    }
-
-    //public void TestAnimationEvent(AnimationEvent animationEvent)
-    //{
-    //    Debug.Log("Int：" + animationEvent.intParameter);
-    //    Debug.Log("Float：" + animationEvent.floatParameter);
-    //    Debug.Log("String：" + animationEvent.stringParameter);
-    //    Debug.Log("Object：" + animationEvent.objectReferenceParameter);
-    //    Debug.Log("FunctionName：" + animationEvent.functionName);
-    //}
 
     #region Biomech_Master
     //暗影魔法球
@@ -145,7 +44,7 @@ public class PlayerController : MonoBehaviour
     #region 暗影魔法球
     private void CreateShadowProjectile(int isLeft)
     {
-        if(isLeft == 1)
+        if (isLeft == 1)
         {
             Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
         }
@@ -220,11 +119,205 @@ public class PlayerController : MonoBehaviour
     #region Biomech_Blademan
     public Material[] blademanMaterials;
     public RuntimeAnimatorController blademanRA;
+    public bool ifEquip;
+    public GameObject equipBladeGo;
+    public GameObject unEquipBladeGo;
+    private bool startCombo;
+
+    private void ShowOrHideEquipBladeGo(int show)
+    {
+        bool showState = System.Convert.ToBoolean(show);
+        equipBladeGo.SetActive(showState);
+    }
+
+    private void ShowOrHideUnEquipBladeGo(int show)
+    {
+        bool showState = System.Convert.ToBoolean(show);
+        unEquipBladeGo.SetActive(showState);
+    }
+
+    /// <summary>
+    /// 关闭进入攻击一的入口
+    /// </summary>
+    private void EndAttackState()
+    {
+        animator.SetBool("Attack", false);
+        startCombo = true;
+    }
+
+    /// <summary>
+    /// 关闭连击
+    /// </summary>
+    private void EndComboState()
+    {
+        startCombo = false;
+    }
 
     #endregion
 
+    private void Start()
+    {
+        rigid = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        transfigurationEffect.Stop();
+        transfigurationEffect.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 玩家输入
+    /// </summary>
+    private void PlayerInput()
+    {
+        inputH = Input.GetAxis("Horizontal");
+        inputV = Input.GetAxis("Vertical");
+        if (inputH != 0 && inputV != 0)
+        {
+            float targetRotation = rotateSpeed * inputH;
+            transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
+        }
+        //inputDir = new Vector3(inputH, 0, inputV);
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            animator.CrossFade("Transfiguration", 0.1f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ifEquip = !ifEquip;
+            animator.SetBool("Equip", ifEquip);
+        }
+
+        if (ifEquip)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!startCombo)
+                {
+                    animator.SetBool("Attack", true);
+                }
+                else
+                {
+                    animator.SetTrigger("AttackCombo");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 跳跃
+    /// </summary>
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isGround)
+        {
+            rigid.AddForce(Vector3.up * jumpForce);
+            isGround = false;
+            animator.SetBool("IsGround", isGround);
+            if (ifEquip)
+            {
+                animator.CrossFade("JumpB", 0.1f);
+            }
+            else
+            {
+                animator.CrossFade("JumpA", 0.1f);
+            }
+        }
+
+    }
+
+    private void Update()
+    {
+        PlayerInput();
+        Jump();
+        GetPlayerSkillInput();
+    }
+
+    /// <summary>
+    /// 移动
+    /// </summary>
+    private void Move()
+    {
+        //if (inputH != 0 || inputV != 0)
+        //{
+        //    rigid.MovePosition(transform.position + transform.TransformDirection(inputDir) * Time.deltaTime * moveSpeed);
+        //}
+
+        if (inputV != 0)
+        {
+            rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
+            animator.SetBool("Move", true);
+            animator.SetFloat("InputH", 0);
+            //animator.SetFloat("MoveState", Mathf.Abs(inputV));
+            animator.SetFloat("InputV", inputV);
+        }
+        else
+        {
+            if (inputH != 0)
+            {
+                rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
+                animator.SetBool("Move", true);
+                //animator.SetFloat("MoveState", Mathf.Abs(inputH));
+                animator.SetFloat("InputH", inputH);
+            }
+            else
+            {
+                animator.SetBool("Move", false);
+                animator.SetFloat("InputH", 0);
+                animator.SetFloat("InputV", 0);
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!isGround)
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                isGround = true;
+                animator.SetBool("IsGround", isGround);
+            }
+        }
+    }
+
+    //public void TestAnimationEvent(AnimationEvent animationEvent)
+    //{
+    //    Debug.Log("Int：" + animationEvent.intParameter);
+    //    Debug.Log("Float：" + animationEvent.floatParameter);
+    //    Debug.Log("String：" + animationEvent.stringParameter);
+    //    Debug.Log("Object：" + animationEvent.objectReferenceParameter);
+    //    Debug.Log("FunctionName：" + animationEvent.functionName);
+    //}
+
     private void GetPlayerSkillInput()
     {
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    animator.CrossFade("Skill1", 0.1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    animator.CrossFade("Skill2", 0.1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    animator.CrossFade("Skill3", 0.1f);
+        //}
+
+        if(currentState == State.Blademan)
+        {
+            if (!ifEquip)
+            {
+                return;
+            }
+        }
+
         for (int i = 0; i < 10; i++)
         {
             if(Input.GetKeyDown(KeyCode.Alpha0 + i))
@@ -246,7 +339,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             transfigurationEffect.Stop();
-            Instantiate(transEffect, transform.position, Quaternion.identity);
+            Instantiate(transEffect, transform.position, transEffect.transform.rotation);
         }
     }
 
@@ -266,6 +359,8 @@ public class PlayerController : MonoBehaviour
             case State.Blademan:
                 ChangeMaterials(blademanMaterials);
                 animator.runtimeAnimatorController = blademanRA;
+                HideBall(0);
+                HideBall(1);
                 break;
             case State.Swordman:
                 break;
