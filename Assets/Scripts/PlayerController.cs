@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem transfigurationEffect;
     public Material[] masterMaterials;
     public RuntimeAnimatorController masterRA;
+    private bool isRunning;
 
     #region 事件函数
     private void Start()
@@ -165,6 +166,7 @@ public class PlayerController : MonoBehaviour
     public GameObject darkBladeGo;
     public ParticleSystem changeBladeEffect;
     public int moveScale = 1;
+    private float timeLost;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -240,19 +242,46 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    private bool DoubleForward()
+    {
+        return inputV > 0 && Input.GetAxis("Vertical") > 0;
+    }
+
     /// <summary>
     /// 玩家输入
     /// </summary>
     private void PlayerInput()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (isRunning)
         {
-            moveScale = 2;
+            moveScale = 3;
         }
         else
         {
-            moveScale = 1;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                moveScale = 2;
+            }
+            else
+            {
+                moveScale = 1;
+            }
         }
+        
+        if (Input.GetButtonDown("Vertical"))
+        {
+            if(Time.time - timeLost < 0.5f && DoubleForward())
+            {
+                isRunning = true;
+            }
+            timeLost = Time.time;
+        }
+
+        if (Input.GetButtonUp("Vertical"))
+        {
+            isRunning = false;
+        }
+
         inputH = Input.GetAxis("Horizontal") * moveScale;
         inputV = Input.GetAxis("Vertical") * moveScale;
         if (inputH != 0 && inputV != 0)
