@@ -123,6 +123,8 @@ public class PlayerController : MonoBehaviour
     public GameObject equipBladeGo;
     public GameObject unEquipBladeGo;
     private bool startCombo;
+    public ParticleSystem leftHitBallPS;
+    public ParticleSystem rightHitBallPS;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -151,6 +153,32 @@ public class PlayerController : MonoBehaviour
     private void EndComboState()
     {
         startCombo = false;
+    }
+
+    private void PlayHitBallEffect(int isLeft)
+    {
+        if (isLeft == 1)
+        {
+            leftHitBallPS.Play();
+
+        }
+        else
+        {
+            rightHitBallPS.Play(true);
+        }
+    }
+
+    private void StopHitBallPS(int isLeft)
+    {
+        if (isLeft == 1)
+        {
+            leftHitBallPS.Stop();
+
+        }
+        else
+        {
+            rightHitBallPS.Stop();
+        }
     }
 
     #endregion
