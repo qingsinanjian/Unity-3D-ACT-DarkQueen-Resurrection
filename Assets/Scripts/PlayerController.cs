@@ -41,7 +41,12 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem transfigurationEffect;
     public Material[] masterMaterials;
     public RuntimeAnimatorController masterRA;
+
+    public int moveScale = 1;
+    private float timeLost;
     private bool isRunning;
+    private int jumpCount;
+    public int jumpNum;
 
     #region ÊÂ¼þº¯Êý
     private void Start()
@@ -72,6 +77,7 @@ public class PlayerController : MonoBehaviour
             {
                 isGround = true;
                 animator.SetBool("IsGround", isGround);
+                jumpCount = 0;
             }
         }
     }
@@ -165,8 +171,6 @@ public class PlayerController : MonoBehaviour
     public GameObject bladeGo;
     public GameObject darkBladeGo;
     public ParticleSystem changeBladeEffect;
-    public int moveScale = 1;
-    private float timeLost;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -324,19 +328,32 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGround)
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount <= jumpNum)
         {
-            rigid.AddForce(Vector3.up * jumpForce);
-            isGround = false;
-            animator.SetBool("IsGround", isGround);
-            if (ifEquip)
+            if (isGround)
             {
-                animator.CrossFade("JumpB", 0.1f);
+                isGround = false;
+                animator.SetBool("IsGround", isGround);
+            }
+            jumpCount++;
+            rigid.AddForce(Vector3.up * jumpForce * jumpCount * 0.5f);
+            
+            if(jumpCount == 1)
+            {
+                animator.CrossFade("Jump", 0.1f);
             }
             else
             {
-                animator.CrossFade("JumpA", 0.1f);
+                animator.CrossFade("Double_Jump", 0.1f);
             }
+            //if (ifEquip)
+            //{
+            //    animator.CrossFade("JumpB", 0.1f);
+            //}
+            //else
+            //{
+            //    animator.CrossFade("JumpA", 0.1f);
+            //}
         }
     }
 
@@ -353,7 +370,7 @@ public class PlayerController : MonoBehaviour
         if (inputV != 0)
         {
             rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
-            animator.SetBool("Move", true);
+            //animator.SetBool("Move", true);
             animator.SetFloat("InputH", 0);
             //animator.SetFloat("MoveState", Mathf.Abs(inputV));
             animator.SetFloat("InputV", inputV);
@@ -363,13 +380,13 @@ public class PlayerController : MonoBehaviour
             if (inputH != 0)
             {
                 rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
-                animator.SetBool("Move", true);
+                //animator.SetBool("Move", true);
                 //animator.SetFloat("MoveState", Mathf.Abs(inputH));
                 animator.SetFloat("InputH", inputH);
             }
             else
             {
-                animator.SetBool("Move", false);
+                //animator.SetBool("Move", false);
                 animator.SetFloat("InputH", 0);
                 animator.SetFloat("InputV", 0);
             }
