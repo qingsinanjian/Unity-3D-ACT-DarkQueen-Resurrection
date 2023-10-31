@@ -17,4 +17,17 @@ public class BladeItem : MonoBehaviour
     {
         transform.Rotate(Vector3.up, Time.deltaTime * rotateSpeed, Space.World);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "Biomech")
+        {
+            PlayerController pc = other.GetComponent<PlayerController>();
+            if(pc.currentState == State.Blademan)
+            {
+                pc.HasNewBlade();
+                Destroy(this.gameObject);
+            }
+        }
+    }
 }

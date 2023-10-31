@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviour
     public GameObject bladeGo;
     public GameObject darkBladeGo;
     public ParticleSystem changeBladeEffect;
+    private bool hasBlade;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -251,6 +252,15 @@ public class PlayerController : MonoBehaviour
         return inputV > 0 && Input.GetAxis("Vertical") > 0;
     }
 
+    public void HasNewBlade()
+    {
+        equipBladeGo.SetActive(true);
+        hasBlade = true;
+        animator.CrossFade("EquipState", 0.1f);
+        animator.SetBool("Equip", true);
+        ifEquip = true;
+    }
+
     /// <summary>
     /// ÕÊº“ ‰»Î
     /// </summary>
@@ -264,11 +274,11 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                moveScale = 2;
+                moveScale = 1;
             }
             else
             {
-                moveScale = 1;
+                moveScale = 2;
             }
         }
         
@@ -302,9 +312,12 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            ifEquip = !ifEquip;
-            animator.SetBool("Equip", ifEquip);
-            startCombo = false;
+            if (hasBlade)
+            {
+                ifEquip = !ifEquip;
+                animator.SetBool("Equip", ifEquip);
+                startCombo = false;
+            } 
         }
 
         if (ifEquip)
