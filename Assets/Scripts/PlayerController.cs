@@ -20,6 +20,46 @@ public class PlayerController : MonoBehaviour
     public State currentState;
     public SkinnedMeshRenderer sr;
     public GameObject transEffect;
+    public bool canGetPlayerInputValue;
+    public bool canMove;
+    public bool canJump;
+    public bool canAttack;
+
+    #region 事件函数
+    private void Start()
+    {
+        rigid = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        transfigurationEffect.Stop();
+        transfigurationEffect.gameObject.SetActive(false);
+        canGetPlayerInputValue = true;
+    }
+
+    private void Update()
+    {
+        if (!canGetPlayerInputValue) return;
+        PlayerInput();
+    }
+
+    private void FixedUpdate()
+    {
+        if (!canGetPlayerInputValue) return;
+        Move();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!isGround)
+        {
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                isGround = true;
+                animator.SetBool("IsGround", isGround);
+                jumpCount = 0;
+            }
+        }
+    }
+    #endregion
 
     #region Biomech_Master
     [Header("*************Biomech_Master*************")]
@@ -47,41 +87,6 @@ public class PlayerController : MonoBehaviour
     private bool isRunning;
     private int jumpCount;
     public int jumpNum;
-
-    #region 事件函数
-    private void Start()
-    {
-        rigid = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        transfigurationEffect.Stop();
-        transfigurationEffect.gameObject.SetActive(false);
-    }
-
-    private void Update()
-    {
-        PlayerInput();
-        Jump();
-        GetPlayerSkillInput();
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!isGround)
-        {
-            if (collision.gameObject.CompareTag("Ground"))
-            {
-                isGround = true;
-                animator.SetBool("IsGround", isGround);
-                jumpCount = 0;
-            }
-        }
-    }
-    #endregion
 
     #region 暗影魔法球
     private void CreateShadowProjectile(int isLeft)
@@ -272,6 +277,15 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerInput()
     {
+        PlayerMoveInput();
+        PlayerEquipInput();
+        PlayerAttckInput();
+        PlayerJumpInput();
+        PlayerSkillInput();
+    }
+
+    private void PlayerMoveInput()
+    {
         if (isRunning)
         {
             moveScale = 3;
@@ -287,10 +301,10 @@ public class PlayerController : MonoBehaviour
                 moveScale = 2;
             }
         }
-        
+
         if (Input.GetButtonDown("Vertical"))
         {
-            if(Time.time - timeLost < 0.5f && DoubleForward())
+            if (Time.time - timeLost < 0.5f && DoubleForward())
             {
                 isRunning = true;
             }
@@ -308,16 +322,11 @@ public class PlayerController : MonoBehaviour
         {
             float targetRotation = rotateSpeed * inputH;
             transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
-        }
-        //inputDir = new Vector3(inputH, 0, inputV);
+        }      
+    }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            animator.CrossFade("Transfiguration", 0.1f);
-        }
-
-        EquipWeapon();
-
+    private void PlayerAttckInput()
+    {
         if (ifEquip)
         {
             if (Input.GetMouseButtonDown(0))
@@ -334,7 +343,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void EquipWeapon()
+    /// <summary>
+    /// 玩家切换装备输入及切换职业
+    /// </summary>
+    private void PlayerEquipInput()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -357,12 +369,16 @@ public class PlayerController : MonoBehaviour
             }
             //SetAnimationPlaySpeed(-1);
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            animator.CrossFade("Transfiguration", 0.1f);
+        }
     }
 
     /// <summary>
     /// 跳跃
     /// </summary>
-    private void Jump()
+    private void PlayerJumpInput()
     {
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount <= jumpNum)
         {
@@ -438,7 +454,7 @@ public class PlayerController : MonoBehaviour
     //    Debug.Log("FunctionName：" + animationEvent.functionName);
     //}
 
-    private void GetPlayerSkillInput()
+    private void PlayerSkillInput()
     {
         //if (Input.GetKeyDown(KeyCode.Alpha1))
         //{
