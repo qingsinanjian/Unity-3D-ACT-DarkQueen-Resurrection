@@ -165,13 +165,13 @@ public class PlayerController : MonoBehaviour
     public bool ifEquip;
     public GameObject equipBladeGo;
     public GameObject unEquipBladeGo;
-    private bool startCombo = false;
+    public bool startCombo = false;
     public ParticleSystem leftHitBallPS;
     public ParticleSystem rightHitBallPS;
     public GameObject bladeGo;
     public GameObject darkBladeGo;
     public ParticleSystem changeBladeEffect;
-    private bool hasBlade;
+    public bool hasBlade;
 
     private void ShowOrHideEquipBladeGo(int show)
     {
@@ -247,6 +247,12 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region Biomech_Swordman
+    [Header("*************Biomech_Swordman*************")]
+    public Material[] swordmanMaterials;
+    public RuntimeAnimatorController swordmanRA;
+
+    #endregion
     private bool DoubleForward()
     {
         return inputV > 0 && Input.GetAxis("Vertical") > 0;
@@ -310,15 +316,7 @@ public class PlayerController : MonoBehaviour
             animator.CrossFade("Transfiguration", 0.1f);
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (hasBlade)
-            {
-                ifEquip = !ifEquip;
-                animator.SetBool("Equip", ifEquip);
-                startCombo = false;
-            } 
-        }
+        EquipWeapon();
 
         if (ifEquip)
         {
@@ -333,6 +331,31 @@ public class PlayerController : MonoBehaviour
                     animator.SetTrigger("AttackCombo");
                 }
             }
+        }
+    }
+
+    private void EquipWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (currentState == State.Blademan)
+            {
+                if (hasBlade)
+                {
+                    ifEquip = !ifEquip;
+                    animator.SetBool("Equip", ifEquip);
+                }
+            }
+            else if (currentState == State.Swordman)
+            {
+                ifEquip = !ifEquip;
+                animator.SetBool("Equip", ifEquip);
+                if(ifEquip)//A转B
+                {
+                    animator.CrossFade("EquipSword", 0.1f);
+                }
+            }
+            //SetAnimationPlaySpeed(-1);
         }
     }
 
@@ -447,6 +470,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 设置某个动画状态的播放速度(此状态已经设置为受动画参数影响的状态)
+    /// </summary>
+    /// <param name="speed"></param>
+    private void SetAnimationPlaySpeed(float speed)
+    {
+        animator.SetFloat("AnimationPlaySpeed", speed);
+    }
+
     #region 变身
     private void PlayTransfigurationEffect(int show)
     {
@@ -483,6 +515,10 @@ public class PlayerController : MonoBehaviour
                 HideBall(1);
                 break;
             case State.Swordman:
+                ChangeMaterials(swordmanMaterials);
+                animator.runtimeAnimatorController = swordmanRA;
+                ShowOrHideEquipBladeGo(0);
+                ShowOrHideUnEquipBladeGo(0);
                 break;
             case State.Assassin:
                 break;
