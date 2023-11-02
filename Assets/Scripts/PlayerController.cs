@@ -20,10 +20,12 @@ public class PlayerController : MonoBehaviour
     public State currentState;
     public SkinnedMeshRenderer sr;
     public GameObject transEffect;
-    public bool canGetPlayerInputValue;
-    public bool canMove;
-    public bool canJump;
-    public bool canAttack;
+    public bool canGetPlayerInputValue = true;
+    public bool canMove = true;
+    public bool canJump = true;
+    public bool canAttack = true;
+    public bool canEquip = true;
+    public bool canUseSkill = true;
 
     #region 事件函数
     private void Start()
@@ -32,12 +34,10 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         transfigurationEffect.Stop();
         transfigurationEffect.gameObject.SetActive(false);
-        canGetPlayerInputValue = true;
     }
 
     private void Update()
     {
-        if (!canGetPlayerInputValue) return;
         PlayerInput();
     }
 
@@ -256,7 +256,18 @@ public class PlayerController : MonoBehaviour
     [Header("*************Biomech_Swordman*************")]
     public Material[] swordmanMaterials;
     public RuntimeAnimatorController swordmanRA;
+    public ParticleSystem swordEffect;
+    public GameObject swordGo;
 
+    private void ShowOrHideSword(bool show)
+    {
+        swordGo.SetActive(show);
+    }
+
+    private void PlaySwordEffect()
+    {
+        swordEffect.Play();
+    }
     #endregion
     private bool DoubleForward()
     {
@@ -277,6 +288,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerInput()
     {
+        if (!canGetPlayerInputValue) return;
         PlayerMoveInput();
         PlayerEquipInput();
         PlayerAttckInput();
@@ -286,6 +298,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerMoveInput()
     {
+        if (!canMove) return;
         if (isRunning)
         {
             moveScale = 3;
@@ -327,6 +340,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerAttckInput()
     {
+        if (!canAttack) return;
         if (ifEquip)
         {
             if (Input.GetMouseButtonDown(0))
@@ -348,6 +362,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerEquipInput()
     {
+        if (!canEquip) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (currentState == State.Blademan)
@@ -380,6 +395,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerJumpInput()
     {
+        if (!canJump) return;
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount <= jumpNum)
         {
             if (isGround)
@@ -407,6 +423,16 @@ public class PlayerController : MonoBehaviour
             //    animator.CrossFade("JumpA", 0.1f);
             //}
         }
+    }
+
+    public void UnLockAll()
+    {
+        canGetPlayerInputValue = true;
+        canMove = true;
+        canJump = true;
+        canAttack = true;
+        canEquip = true;
+        canUseSkill = true;
     }
 
     /// <summary>
@@ -456,6 +482,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerSkillInput()
     {
+        if (!canUseSkill) return;
         //if (Input.GetKeyDown(KeyCode.Alpha1))
         //{
         //    animator.CrossFade("Skill1", 0.1f);
@@ -468,8 +495,7 @@ public class PlayerController : MonoBehaviour
         //{
         //    animator.CrossFade("Skill3", 0.1f);
         //}
-
-        if(currentState == State.Blademan)
+        if(currentState == State.Blademan || currentState == State.Swordman)
         {
             if (!ifEquip)
             {
@@ -518,29 +544,44 @@ public class PlayerController : MonoBehaviour
         {
             currentState = State.Master;
         }
+        ResetState();
         switch (currentState)
         {
             case State.Master:
                 ChangeMaterials(masterMaterials);
                 animator.runtimeAnimatorController = masterRA;
+                ShowBall(1);
                 break;
             case State.Blademan:
                 ChangeMaterials(blademanMaterials);
                 animator.runtimeAnimatorController = blademanRA;
-                HideBall(0);
-                HideBall(1);
+                if (hasBlade)
+                {
+                    ShowOrHideUnEquipBladeGo(1);
+                }
                 break;
             case State.Swordman:
                 ChangeMaterials(swordmanMaterials);
                 animator.runtimeAnimatorController = swordmanRA;
-                ShowOrHideEquipBladeGo(0);
-                ShowOrHideUnEquipBladeGo(0);
+                ShowOrHideSword(true);
                 break;
             case State.Assassin:
                 break;
             default:
                 break;
         }
+    }
+
+    /// <summary>
+    /// 重置所有状态下的武器
+    /// </summary>
+    private void ResetState()
+    {
+        HideBall(0);
+        HideBall(1);
+        ShowOrHideEquipBladeGo(0);
+        ShowOrHideUnEquipBladeGo(0);
+        ShowOrHideSword(false);
     }
 
     private void ChangeMaterials(Material[] materials)
