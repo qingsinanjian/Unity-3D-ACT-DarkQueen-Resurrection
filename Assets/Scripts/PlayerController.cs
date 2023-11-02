@@ -271,7 +271,7 @@ public class PlayerController : MonoBehaviour
     #endregion
     private bool DoubleForward()
     {
-        return inputV > 0 && Input.GetAxis("Vertical") > 0;
+        return inputV > 0 && Input.GetAxis("Vertical") > 0 && currentState != State.Master;
     }
 
     public void HasNewBlade()
@@ -298,7 +298,11 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerMoveInput()
     {
-        if (!canMove) return;
+        if (!canMove)
+        {
+            inputH = inputV = 0;
+            return;
+        }
         if (isRunning)
         {
             moveScale = 3;
@@ -395,7 +399,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerJumpInput()
     {
-        if (!canJump) return;
+        if (!canJump)
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount <= jumpNum)
         {
             if (isGround)
@@ -403,17 +410,16 @@ public class PlayerController : MonoBehaviour
                 isGround = false;
                 animator.SetBool("IsGround", isGround);
             }
-            jumpCount++;
-            rigid.AddForce(Vector3.up * jumpForce * jumpCount * 0.5f);
-            
-            if(jumpCount == 1)
+            rigid.AddForce(Vector3.up * jumpForce * (jumpCount * 0.3f + 1));
+            if (jumpCount == 0)
             {
                 animator.CrossFade("Jump", 0.1f);
             }
             else
             {
-                animator.CrossFade("Double_Jump", 0.1f);
+                animator.CrossFade("DoubleJump", 0.1f);
             }
+            jumpCount++;
             //if (ifEquip)
             //{
             //    animator.CrossFade("JumpB", 0.1f);
@@ -540,7 +546,7 @@ public class PlayerController : MonoBehaviour
     private void ChangeStateProperties()
     {
         currentState++;
-        if(System.Convert.ToInt32(currentState) > 1)
+        if(System.Convert.ToInt32(currentState) > 2)
         {
             currentState = State.Master;
         }
@@ -551,6 +557,7 @@ public class PlayerController : MonoBehaviour
                 ChangeMaterials(masterMaterials);
                 animator.runtimeAnimatorController = masterRA;
                 ShowBall(1);
+                jumpNum = 0;
                 break;
             case State.Blademan:
                 ChangeMaterials(blademanMaterials);
@@ -570,6 +577,7 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
+        canGetPlayerInputValue = true;
     }
 
     /// <summary>
@@ -577,11 +585,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ResetState()
     {
+        ifEquip = false;
         HideBall(0);
         HideBall(1);
         ShowOrHideEquipBladeGo(0);
         ShowOrHideUnEquipBladeGo(0);
         ShowOrHideSword(false);
+        jumpNum = 1;
     }
 
     private void ChangeMaterials(Material[] materials)

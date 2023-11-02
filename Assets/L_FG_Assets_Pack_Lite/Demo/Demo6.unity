@@ -21852,6 +21852,7 @@ Transform:
   - {fileID: 68299754}
   - {fileID: 1671204498}
   - {fileID: 1045195872}
+  - {fileID: 2060827410}
   - {fileID: 941319682}
   - {fileID: 1440291084}
   - {fileID: 547624630}
@@ -21859,7 +21860,6 @@ Transform:
   - {fileID: 1340218946}
   - {fileID: 1975160176}
   - {fileID: 892562067}
-  - {fileID: 2060827410}
   - {fileID: 1890732233}
   - {fileID: 2086714804}
   - {fileID: 281665376}
@@ -37268,7 +37268,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   rotateSpeed: 90
-  jumpForce: 700
+  jumpForce: 600
   currentState: 2
   sr: {fileID: 1827629864136080494}
   transEffect: {fileID: 2968290831011254305, guid: c6ad8a9daa0451c408a547e3f8426403, type: 3}
@@ -37291,7 +37291,7 @@ MonoBehaviour:
   masterMaterials:
   - {fileID: 2100000, guid: a2fa1990d06d9eb4a8e274c18b642246, type: 2}
   - {fileID: 2100000, guid: dc30d0f173c2c674091d33a2f0b74d1f, type: 2}
-  masterRA: {fileID: 22100000, guid: e49cbc862e4223445b509162c4983364, type: 2}
+  masterRA: {fileID: 9100000, guid: 5ea1b9849c400eb48b0c709edf75bde3, type: 2}
   moveScale: 0
   jumpNum: 1
   blademanMaterials:
@@ -63333,7 +63333,7 @@ Transform:
   m_Children:
   - {fileID: 732666552}
   m_Father: {fileID: 636589998}
-  m_RootOrder: 305
+  m_RootOrder: 298
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2060827411
 MeshRenderer:
