@@ -130,9 +130,9 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 暗影斩
-    private void PlaySlashParticals()
+    private void PlaySlashParticals(float angle)
     {
-        Instantiate(slashEffectGo, transform.position + new Vector3(transform.forward.x, transform.forward.y + 1.3f, transform.forward.z * 1.3f), transform.rotation);
+        Instantiate(slashEffectGo, transform.position + new Vector3(transform.forward.x, transform.forward.y + 1.3f, transform.forward.z * 1.3f), Quaternion.Euler(transform.rotation.eulerAngles - new Vector3(0, 0, angle)));
     }
 
     #endregion
@@ -205,6 +205,7 @@ public class PlayerController : MonoBehaviour
     private void EndComboState()
     {
         startCombo = false;
+        animator.ResetTrigger("AttackCombo");
     }
 
     private void PlayHitBallEffect(int isLeft)
@@ -267,6 +268,82 @@ public class PlayerController : MonoBehaviour
     private void PlaySwordEffect()
     {
         swordEffect.Play();
+    }
+    #endregion
+
+    #region Biomech_Assassin
+    [Header("*************Biomech_Assassin*************")]
+    public Material[] assassinMaterials;
+    public RuntimeAnimatorController assassinRA;
+    public GameObject ueLeftDagger;
+    public GameObject ueRightDagger;
+    public GameObject leftDagger;
+    public GameObject rightDagger;
+
+    /// <summary>
+    /// 显示与隐藏腰间的匕首
+    /// </summary>
+    /// <param name="handID">0为右手，1为左手</param>
+    /// <param name="show"></param>
+    private void ShowOrHideUnEquipDaggers(int handID, bool show)
+    {
+        if (handID == 0)
+        {
+            //右手
+            ueRightDagger.SetActive(show);
+        }
+        else
+        {
+            //左手
+            ueLeftDagger.SetActive(show);
+        }
+    }
+
+    private void ShowOrHideUnEquipDaggers(AnimationEvent animationEvent)
+    {
+        if(animationEvent.intParameter == 0)
+        {
+            //右手
+            ueRightDagger.SetActive(System.Convert.ToBoolean(animationEvent.stringParameter));
+        }
+        else
+        {
+            //左手
+            ueLeftDagger.SetActive(System.Convert.ToBoolean(animationEvent.stringParameter));
+        }
+    }
+
+    /// <summary>
+    /// 显示与隐藏手上的匕首
+    /// </summary>
+    /// <param name="handID">0为右手，1为左手</param>
+    /// <param name="show"></param>
+    private void ShowOrHideEquipDaggers(int handID, bool show)
+    {
+        if (handID == 0)
+        {
+            //右手
+            rightDagger.SetActive(show);
+        }
+        else
+        {
+            //左手
+            leftDagger.SetActive(show);
+        }
+    }
+
+    private void ShowOrHideEquipDaggers(AnimationEvent animationEvent)
+    {
+        if (animationEvent.intParameter == 0)
+        {
+            //右手
+            rightDagger.SetActive(System.Convert.ToBoolean(animationEvent.stringParameter));
+        }
+        else
+        {
+            //左手
+            leftDagger.SetActive(System.Convert.ToBoolean(animationEvent.stringParameter));
+        }
     }
     #endregion
     private bool DoubleForward()
@@ -385,8 +462,13 @@ public class PlayerController : MonoBehaviour
                 {
                     animator.CrossFade("EquipSword", 0.1f);
                 }
+                //SetAnimationPlaySpeed(-1);
             }
-            //SetAnimationPlaySpeed(-1);
+            else if(currentState == State.Assassin)
+            {
+                ifEquip = !ifEquip;
+                animator.SetBool("Equip", ifEquip);
+            }
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -546,7 +628,7 @@ public class PlayerController : MonoBehaviour
     private void ChangeStateProperties()
     {
         currentState++;
-        if(System.Convert.ToInt32(currentState) > 2)
+        if(System.Convert.ToInt32(currentState) > 3)
         {
             currentState = State.Master;
         }
@@ -573,11 +655,15 @@ public class PlayerController : MonoBehaviour
                 ShowOrHideSword(true);
                 break;
             case State.Assassin:
+                ShowOrHideUnEquipDaggers(0, true);
+                ShowOrHideUnEquipDaggers(1, true);
                 break;
             default:
                 break;
         }
         canGetPlayerInputValue = true;
+        ifEquip = false;
+        animator.SetBool("Equip", false);
     }
 
     /// <summary>
@@ -592,6 +678,10 @@ public class PlayerController : MonoBehaviour
         ShowOrHideUnEquipBladeGo(0);
         ShowOrHideSword(false);
         jumpNum = 1;
+        ShowOrHideUnEquipDaggers(0, false);
+        ShowOrHideUnEquipDaggers(1, false);
+        ShowOrHideEquipDaggers(0, false);
+        ShowOrHideEquipDaggers(1, false);
     }
 
     private void ChangeMaterials(Material[] materials)
