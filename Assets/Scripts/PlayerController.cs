@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="handID">0为右手，1为左手</param>
     /// <param name="show"></param>
-    private void ShowOrHideUnEquipDaggers(int handID, bool show)
+    private void ShowOrHideUnEquipDaggers_N(int handID, bool show)
     {
         if (handID == 0)
         {
@@ -318,7 +318,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="handID">0为右手，1为左手</param>
     /// <param name="show"></param>
-    private void ShowOrHideEquipDaggers(int handID, bool show)
+    private void ShowOrHideEquipDaggers_N(int handID, bool show)
     {
         if (handID == 0)
         {
@@ -416,7 +416,15 @@ public class PlayerController : MonoBehaviour
         {
             float targetRotation = rotateSpeed * inputH;
             transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
-        }      
+        }
+        if(inputV != 0 || (inputV == 0 && inputH != 0))
+        {
+            animator.SetFloat("MoveState", 1);
+        }
+        else
+        {
+            animator.SetFloat("MoveState", 0);
+        }
     }
 
     private void PlayerAttckInput()
@@ -655,8 +663,10 @@ public class PlayerController : MonoBehaviour
                 ShowOrHideSword(true);
                 break;
             case State.Assassin:
-                ShowOrHideUnEquipDaggers(0, true);
-                ShowOrHideUnEquipDaggers(1, true);
+                ChangeMaterials(assassinMaterials);
+                animator.runtimeAnimatorController = assassinRA;
+                ShowOrHideUnEquipDaggers_N(0, true);
+                ShowOrHideUnEquipDaggers_N(1, true);
                 break;
             default:
                 break;
@@ -678,10 +688,10 @@ public class PlayerController : MonoBehaviour
         ShowOrHideUnEquipBladeGo(0);
         ShowOrHideSword(false);
         jumpNum = 1;
-        ShowOrHideUnEquipDaggers(0, false);
-        ShowOrHideUnEquipDaggers(1, false);
-        ShowOrHideEquipDaggers(0, false);
-        ShowOrHideEquipDaggers(1, false);
+        ShowOrHideUnEquipDaggers_N(0, false);
+        ShowOrHideUnEquipDaggers_N(1, false);
+        ShowOrHideEquipDaggers_N(0, false);
+        ShowOrHideEquipDaggers_N(1, false);
     }
 
     private void ChangeMaterials(Material[] materials)
