@@ -60,6 +60,15 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Weapon"))
+        {
+            Debug.Log("受到2点伤害");
+            TakeDamage(2, other.ClosestPoint(transform.position));
+        }
+    }
     #endregion
 
     /// <summary>
@@ -433,7 +442,57 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 受到伤害
+    private void TakeDamage(float damageValue, Vector3 hitPos)
+    {
+        float x = Vector3.Dot(transform.right, hitPos);
+        float y = Vector3.Dot(transform.forward, hitPos - transform.position);
+        animator.SetTrigger("Hit");
+        if (ForwardBehindOrLeftRight(hitPos))
+        {
+            if(y > 0)
+            {
+                Debug.Log("在前方");
+                animator.SetFloat("HitY", 1);
+            }
+            else
+            {
+                Debug.Log("在后方");
+                animator.SetFloat("HitY", -1);
+            }
+        }
+        else
+        {
+            if (x > 0)
+            {
+                Debug.Log("在右方");
+                animator.SetFloat("HitX", 1);
+            }
+            else
+            {
+                Debug.Log("在左方");
+                animator.SetFloat("HitX", -1);
+            }
+        }
+    }
 
+    /// <summary>
+    /// 判断前后左右影响度（true前后影响更大,false左右影响更大）
+    /// </summary>
+    /// <param name="targetPos"></param>
+    /// <returns></returns>
+    private bool ForwardBehindOrLeftRight(Vector3 targetPos)
+    {
+        float ZDistance = Mathf.Abs(transform.position.z - targetPos.z);
+        float XDistance = Mathf.Abs(transform.position.x - targetPos.x);
+        if(ZDistance >= XDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     #endregion
 
     #endregion
