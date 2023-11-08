@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Biomech_Common
     private float inputH;
     private float inputV;
     private Rigidbody rigid;
@@ -59,6 +60,382 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    /// <summary>
+    /// 刀客状态下捡起刀
+    /// </summary>
+    public void HasNewBlade()
+    {
+        equipBladeGo.SetActive(true);
+        hasBlade = true;
+        animator.CrossFade("EquipState", 0.1f);
+        animator.SetBool("Equip", true);
+        ifEquip = true;
+    }
+
+    #region 移动与跳跃
+    /// <summary>
+    /// 移动
+    /// </summary>
+    private void Move()
+    {
+        //if (inputH != 0 || inputV != 0)
+        //{
+        //    rigid.MovePosition(transform.position + transform.TransformDirection(inputDir) * Time.deltaTime * moveSpeed);
+        //}
+
+        if (inputV != 0)
+        {
+            rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
+            //animator.SetBool("Move", true);
+            animator.SetFloat("InputH", 0);
+            //animator.SetFloat("MoveState", Mathf.Abs(inputV));
+            animator.SetFloat("InputV", inputV);
+        }
+        else
+        {
+            if (inputH != 0)
+            {
+                rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
+                //animator.SetBool("Move", true);
+                //animator.SetFloat("MoveState", Mathf.Abs(inputH));
+                animator.SetFloat("InputH", inputH);
+            }
+            else
+            {
+                //animator.SetBool("Move", false);
+                animator.SetFloat("InputH", 0);
+                animator.SetFloat("InputV", 0);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 玩家移动输入
+    /// </summary>
+    private void PlayerMoveInput()
+    {
+        if (!canMove)
+        {
+            inputH = inputV = 0;
+            return;
+        }
+        if (isRunning)
+        {
+            moveScale = 3;
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                moveScale = 1;
+            }
+            else
+            {
+                moveScale = 2;
+            }
+        }
+
+        if (Input.GetButtonDown("Vertical"))
+        {
+            if (Time.time - timeLost < 0.5f && DoubleForward())
+            {
+                isRunning = true;
+            }
+            timeLost = Time.time;
+        }
+
+        if (Input.GetButtonUp("Vertical"))
+        {
+            isRunning = false;
+        }
+
+        inputH = Input.GetAxis("Horizontal") * moveScale;
+        inputV = Input.GetAxis("Vertical") * moveScale;
+        if (inputH != 0 && inputV != 0)
+        {
+            float targetRotation = rotateSpeed * inputH;
+            transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
+        }
+        if (inputV != 0 || (inputV == 0 && inputH != 0))
+        {
+            animator.SetFloat("MoveState", 1);
+        }
+        else
+        {
+            animator.SetFloat("MoveState", 0);
+        }
+    }
+
+    /// <summary>
+    /// 跳跃
+    /// </summary>
+    private void PlayerJumpInput()
+    {
+        if (!canJump)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount <= jumpNum)
+        {
+            if (isGround)
+            {
+                isGround = false;
+                animator.SetBool("IsGround", isGround);
+            }
+            rigid.AddForce(Vector3.up * jumpForce * (jumpCount * 0.3f + 1));
+            if (jumpCount == 0)
+            {
+                animator.CrossFade("Jump", 0.1f);
+            }
+            else
+            {
+                animator.CrossFade("DoubleJump", 0.1f);
+            }
+            jumpCount++;
+            //if (ifEquip)
+            //{
+            //    animator.CrossFade("JumpB", 0.1f);
+            //}
+            //else
+            //{
+            //    animator.CrossFade("JumpA", 0.1f);
+            //}
+        }
+    }
+
+    /// <summary>
+    /// 判断玩家是否在规定时间内按下两次向前按键
+    /// </summary>
+    /// <returns></returns>
+    private bool DoubleForward()
+    {
+        return inputV > 0 && Input.GetAxis("Vertical") > 0 && currentState != State.Master;
+    }
+    #endregion
+
+    #region 玩家输入
+    /// <summary>
+    /// 玩家输入
+    /// </summary>
+    private void PlayerInput()
+    {
+        if (!canGetPlayerInputValue) return;
+        PlayerMoveInput();
+        PlayerEquipInput();
+        PlayerAttckInput();
+        PlayerJumpInput();
+        PlayerSkillInput();
+    }
+
+    /// <summary>
+    /// 玩家攻击输入
+    /// </summary>
+    private void PlayerAttckInput()
+    {
+        if (!canAttack) return;
+        if (ifEquip)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!startCombo)
+                {
+                    animator.SetBool("Attack", true);
+                }
+                else
+                {
+                    animator.SetTrigger("AttackCombo");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 检测玩家的技能输入
+    /// </summary>
+    private void PlayerSkillInput()
+    {
+        if (!canUseSkill) return;
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    animator.CrossFade("Skill1", 0.1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    animator.CrossFade("Skill2", 0.1f);
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    animator.CrossFade("Skill3", 0.1f);
+        //}
+        if (currentState == State.Blademan || currentState == State.Swordman)
+        {
+            if (!ifEquip)
+            {
+                return;
+            }
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            {
+                animator.CrossFade("Skill" + i, 0.1f);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 封锁玩家所有的输入内容
+    /// </summary>
+    public void UnLockAll()
+    {
+        canGetPlayerInputValue = true;
+        canMove = true;
+        canJump = true;
+        canAttack = true;
+        canEquip = true;
+        canUseSkill = true;
+    }
+    #endregion
+
+    //public void TestAnimationEvent(AnimationEvent animationEvent)
+    //{
+    //    Debug.Log("Int：" + animationEvent.intParameter);
+    //    Debug.Log("Float：" + animationEvent.floatParameter);
+    //    Debug.Log("String：" + animationEvent.stringParameter);
+    //    Debug.Log("Object：" + animationEvent.objectReferenceParameter);
+    //    Debug.Log("FunctionName：" + animationEvent.functionName);
+    //}
+
+    #region 变身
+    /// <summary>
+    /// 玩家切换装备输入及切换职业
+    /// </summary>
+    private void PlayerEquipInput()
+    {
+        if (!canEquip) return;
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (currentState == State.Blademan)
+            {
+                if (hasBlade)
+                {
+                    ifEquip = !ifEquip;
+                    animator.SetBool("Equip", ifEquip);
+                }
+            }
+            else if (currentState == State.Swordman)
+            {
+                ifEquip = !ifEquip;
+                animator.SetBool("Equip", ifEquip);
+                if (ifEquip)//A转B
+                {
+                    animator.CrossFade("EquipSword", 0.1f);
+                }
+                //SetAnimationPlaySpeed(-1);
+            }
+            else if (currentState == State.Assassin)
+            {
+                ifEquip = !ifEquip;
+                animator.SetBool("Equip", ifEquip);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            animator.CrossFade("Transfiguration", 0.1f);
+        }
+    }
+    private void PlayTransfigurationEffect(int show)
+    {
+        bool state = System.Convert.ToBoolean(show);
+        if (state)
+        {
+            transfigurationEffect.gameObject.SetActive(true);
+            transfigurationEffect.Play();
+        }
+        else
+        {
+            transfigurationEffect.Stop();
+            Instantiate(transEffect, transform.position, transEffect.transform.rotation);
+        }
+    }
+
+    private void ChangeStateProperties()
+    {
+        currentState++;
+        if (System.Convert.ToInt32(currentState) > 3)
+        {
+            currentState = State.Master;
+        }
+        ResetState();
+        switch (currentState)
+        {
+            case State.Master:
+                ChangeMaterials(masterMaterials);
+                animator.runtimeAnimatorController = masterRA;
+                ShowBall(1);
+                jumpNum = 0;
+                break;
+            case State.Blademan:
+                ChangeMaterials(blademanMaterials);
+                animator.runtimeAnimatorController = blademanRA;
+                if (hasBlade)
+                {
+                    ShowOrHideUnEquipBladeGo(1);
+                }
+                break;
+            case State.Swordman:
+                ChangeMaterials(swordmanMaterials);
+                animator.runtimeAnimatorController = swordmanRA;
+                ShowOrHideSword(true);
+                break;
+            case State.Assassin:
+                ChangeMaterials(assassinMaterials);
+                animator.runtimeAnimatorController = assassinRA;
+                ShowOrHideUnEquipDaggers_N(0, true);
+                ShowOrHideUnEquipDaggers_N(1, true);
+                break;
+            default:
+                break;
+        }
+        canGetPlayerInputValue = true;
+        ifEquip = false;
+        animator.SetBool("Equip", false);
+    }
+
+    /// <summary>
+    /// 重置所有状态下的武器
+    /// </summary>
+    private void ResetState()
+    {
+        ifEquip = false;
+        HideBall(0);
+        HideBall(1);
+        ShowOrHideEquipBladeGo(0);
+        ShowOrHideUnEquipBladeGo(0);
+        ShowOrHideSword(false);
+        jumpNum = 1;
+        ShowOrHideUnEquipDaggers_N(0, false);
+        ShowOrHideUnEquipDaggers_N(1, false);
+        ShowOrHideEquipDaggers_N(0, false);
+        ShowOrHideEquipDaggers_N(1, false);
+    }
+
+    private void ChangeMaterials(Material[] materials)
+    {
+        for (int i = 0; i < materials.Length; i++)
+        {
+            sr.materials[i].CopyPropertiesFromMaterial(materials[i]);
+        }
+    }
+    #endregion
+
+    #region 受到伤害
+
+    #endregion
+
     #endregion
 
     #region Biomech_Master
@@ -346,267 +723,6 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
-    private bool DoubleForward()
-    {
-        return inputV > 0 && Input.GetAxis("Vertical") > 0 && currentState != State.Master;
-    }
-
-    public void HasNewBlade()
-    {
-        equipBladeGo.SetActive(true);
-        hasBlade = true;
-        animator.CrossFade("EquipState", 0.1f);
-        animator.SetBool("Equip", true);
-        ifEquip = true;
-    }
-
-    /// <summary>
-    /// 玩家输入
-    /// </summary>
-    private void PlayerInput()
-    {
-        if (!canGetPlayerInputValue) return;
-        PlayerMoveInput();
-        PlayerEquipInput();
-        PlayerAttckInput();
-        PlayerJumpInput();
-        PlayerSkillInput();
-    }
-
-    private void PlayerMoveInput()
-    {
-        if (!canMove)
-        {
-            inputH = inputV = 0;
-            return;
-        }
-        if (isRunning)
-        {
-            moveScale = 3;
-        }
-        else
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                moveScale = 1;
-            }
-            else
-            {
-                moveScale = 2;
-            }
-        }
-
-        if (Input.GetButtonDown("Vertical"))
-        {
-            if (Time.time - timeLost < 0.5f && DoubleForward())
-            {
-                isRunning = true;
-            }
-            timeLost = Time.time;
-        }
-
-        if (Input.GetButtonUp("Vertical"))
-        {
-            isRunning = false;
-        }
-
-        inputH = Input.GetAxis("Horizontal") * moveScale;
-        inputV = Input.GetAxis("Vertical") * moveScale;
-        if (inputH != 0 && inputV != 0)
-        {
-            float targetRotation = rotateSpeed * inputH;
-            transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
-        }
-        if(inputV != 0 || (inputV == 0 && inputH != 0))
-        {
-            animator.SetFloat("MoveState", 1);
-        }
-        else
-        {
-            animator.SetFloat("MoveState", 0);
-        }
-    }
-
-    private void PlayerAttckInput()
-    {
-        if (!canAttack) return;
-        if (ifEquip)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (!startCombo)
-                {
-                    animator.SetBool("Attack", true);
-                }
-                else
-                {
-                    animator.SetTrigger("AttackCombo");
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// 玩家切换装备输入及切换职业
-    /// </summary>
-    private void PlayerEquipInput()
-    {
-        if (!canEquip) return;
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            if (currentState == State.Blademan)
-            {
-                if (hasBlade)
-                {
-                    ifEquip = !ifEquip;
-                    animator.SetBool("Equip", ifEquip);
-                }
-            }
-            else if (currentState == State.Swordman)
-            {
-                ifEquip = !ifEquip;
-                animator.SetBool("Equip", ifEquip);
-                if(ifEquip)//A转B
-                {
-                    animator.CrossFade("EquipSword", 0.1f);
-                }
-                //SetAnimationPlaySpeed(-1);
-            }
-            else if(currentState == State.Assassin)
-            {
-                ifEquip = !ifEquip;
-                animator.SetBool("Equip", ifEquip);
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            animator.CrossFade("Transfiguration", 0.1f);
-        }
-    }
-
-    /// <summary>
-    /// 跳跃
-    /// </summary>
-    private void PlayerJumpInput()
-    {
-        if (!canJump)
-        {
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCount <= jumpNum)
-        {
-            if (isGround)
-            {
-                isGround = false;
-                animator.SetBool("IsGround", isGround);
-            }
-            rigid.AddForce(Vector3.up * jumpForce * (jumpCount * 0.3f + 1));
-            if (jumpCount == 0)
-            {
-                animator.CrossFade("Jump", 0.1f);
-            }
-            else
-            {
-                animator.CrossFade("DoubleJump", 0.1f);
-            }
-            jumpCount++;
-            //if (ifEquip)
-            //{
-            //    animator.CrossFade("JumpB", 0.1f);
-            //}
-            //else
-            //{
-            //    animator.CrossFade("JumpA", 0.1f);
-            //}
-        }
-    }
-
-    public void UnLockAll()
-    {
-        canGetPlayerInputValue = true;
-        canMove = true;
-        canJump = true;
-        canAttack = true;
-        canEquip = true;
-        canUseSkill = true;
-    }
-
-    /// <summary>
-    /// 移动
-    /// </summary>
-    private void Move()
-    {
-        //if (inputH != 0 || inputV != 0)
-        //{
-        //    rigid.MovePosition(transform.position + transform.TransformDirection(inputDir) * Time.deltaTime * moveSpeed);
-        //}
-
-        if (inputV != 0)
-        {
-            rigid.MovePosition(transform.position + transform.forward * Time.deltaTime * moveSpeed * inputV);
-            //animator.SetBool("Move", true);
-            animator.SetFloat("InputH", 0);
-            //animator.SetFloat("MoveState", Mathf.Abs(inputV));
-            animator.SetFloat("InputV", inputV);
-        }
-        else
-        {
-            if (inputH != 0)
-            {
-                rigid.MovePosition(transform.position + transform.right * Time.deltaTime * moveSpeed * inputH);
-                //animator.SetBool("Move", true);
-                //animator.SetFloat("MoveState", Mathf.Abs(inputH));
-                animator.SetFloat("InputH", inputH);
-            }
-            else
-            {
-                //animator.SetBool("Move", false);
-                animator.SetFloat("InputH", 0);
-                animator.SetFloat("InputV", 0);
-            }
-        }
-    }
-
-    //public void TestAnimationEvent(AnimationEvent animationEvent)
-    //{
-    //    Debug.Log("Int：" + animationEvent.intParameter);
-    //    Debug.Log("Float：" + animationEvent.floatParameter);
-    //    Debug.Log("String：" + animationEvent.stringParameter);
-    //    Debug.Log("Object：" + animationEvent.objectReferenceParameter);
-    //    Debug.Log("FunctionName：" + animationEvent.functionName);
-    //}
-
-    private void PlayerSkillInput()
-    {
-        if (!canUseSkill) return;
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    animator.CrossFade("Skill1", 0.1f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    animator.CrossFade("Skill2", 0.1f);
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //    animator.CrossFade("Skill3", 0.1f);
-        //}
-        if(currentState == State.Blademan || currentState == State.Swordman)
-        {
-            if (!ifEquip)
-            {
-                return;
-            }
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            if(Input.GetKeyDown(KeyCode.Alpha0 + i))
-            {
-                animator.CrossFade("Skill" + i, 0.1f);
-            }
-        }
-    }
 
     /// <summary>
     /// 设置某个动画状态的播放速度(此状态已经设置为受动画参数影响的状态)
@@ -616,92 +732,6 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetFloat("AnimationPlaySpeed", speed);
     }
-
-    #region 变身
-    private void PlayTransfigurationEffect(int show)
-    {
-        bool state = System.Convert.ToBoolean(show);
-        if (state)
-        {
-            transfigurationEffect.gameObject.SetActive(true);
-            transfigurationEffect.Play();
-        }
-        else
-        {
-            transfigurationEffect.Stop();
-            Instantiate(transEffect, transform.position, transEffect.transform.rotation);
-        }
-    }
-
-    private void ChangeStateProperties()
-    {
-        currentState++;
-        if(System.Convert.ToInt32(currentState) > 3)
-        {
-            currentState = State.Master;
-        }
-        ResetState();
-        switch (currentState)
-        {
-            case State.Master:
-                ChangeMaterials(masterMaterials);
-                animator.runtimeAnimatorController = masterRA;
-                ShowBall(1);
-                jumpNum = 0;
-                break;
-            case State.Blademan:
-                ChangeMaterials(blademanMaterials);
-                animator.runtimeAnimatorController = blademanRA;
-                if (hasBlade)
-                {
-                    ShowOrHideUnEquipBladeGo(1);
-                }
-                break;
-            case State.Swordman:
-                ChangeMaterials(swordmanMaterials);
-                animator.runtimeAnimatorController = swordmanRA;
-                ShowOrHideSword(true);
-                break;
-            case State.Assassin:
-                ChangeMaterials(assassinMaterials);
-                animator.runtimeAnimatorController = assassinRA;
-                ShowOrHideUnEquipDaggers_N(0, true);
-                ShowOrHideUnEquipDaggers_N(1, true);
-                break;
-            default:
-                break;
-        }
-        canGetPlayerInputValue = true;
-        ifEquip = false;
-        animator.SetBool("Equip", false);
-    }
-
-    /// <summary>
-    /// 重置所有状态下的武器
-    /// </summary>
-    private void ResetState()
-    {
-        ifEquip = false;
-        HideBall(0);
-        HideBall(1);
-        ShowOrHideEquipBladeGo(0);
-        ShowOrHideUnEquipBladeGo(0);
-        ShowOrHideSword(false);
-        jumpNum = 1;
-        ShowOrHideUnEquipDaggers_N(0, false);
-        ShowOrHideUnEquipDaggers_N(1, false);
-        ShowOrHideEquipDaggers_N(0, false);
-        ShowOrHideEquipDaggers_N(1, false);
-    }
-
-    private void ChangeMaterials(Material[] materials)
-    {
-        for (int i = 0; i < materials.Length; i++)
-        {
-            sr.materials[i].CopyPropertiesFromMaterial(materials[i]);
-        }
-    }
-    #endregion
 }
 
 public enum State
