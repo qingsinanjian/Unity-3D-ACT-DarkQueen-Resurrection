@@ -27,6 +27,14 @@ public class PlayerController : MonoBehaviour
     public bool canAttack = true;
     public bool canEquip = true;
     public bool canUseSkill = true;
+    //受伤相关
+    public bool isClone;
+    private int currentHP;
+    public int HP;
+    public bool isDead;
+    //0.大剑 1.黑暗之剑 2.右匕首 3.长刀 4.左匕首 5.左脚 6.右脚
+    public BoxCollider[] weaponColliders;
+    private Collider col;
 
     #region 事件函数
     private void Start()
@@ -35,11 +43,16 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         transfigurationEffect.Stop();
         transfigurationEffect.gameObject.SetActive(false);
+        currentHP = HP;
+        col = GetComponent<Collider>();
     }
 
     private void Update()
     {
-        PlayerInput();
+        if (!isClone && !isDead)
+        {
+            PlayerInput();
+        }
     }
 
     private void FixedUpdate()
@@ -167,14 +180,18 @@ public class PlayerController : MonoBehaviour
             float targetRotation = rotateSpeed * inputH;
             transform.eulerAngles = Vector3.up * Mathf.Lerp(transform.eulerAngles.y, transform.eulerAngles.y + targetRotation, Time.deltaTime);
         }
-        if (inputV != 0 || (inputV == 0 && inputH != 0))
+
+        if(currentState == State.Assassin)
         {
-            animator.SetFloat("MoveState", 1);
-        }
-        else
-        {
-            animator.SetFloat("MoveState", 0);
-        }
+            if (inputV != 0 || (inputV == 0 && inputH != 0))
+            {
+                animator.SetFloat("MoveState", 1);
+            }
+            else
+            {
+                animator.SetFloat("MoveState", 0);
+            }
+        } 
     }
 
     /// <summary>
@@ -278,7 +295,7 @@ public class PlayerController : MonoBehaviour
         //{
         //    animator.CrossFade("Skill3", 0.1f);
         //}
-        if (currentState == State.Blademan || currentState == State.Swordman)
+        if (currentState == State.Blademan || currentState == State.Swordman || currentState == State.Assassin)
         {
             if (!ifEquip)
             {
@@ -286,17 +303,28 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 10; i++)
+        if(currentState == State.Master)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+            for (int i = 0; i < 10; i++)
             {
-                animator.CrossFade("Skill" + i, 0.1f);
+                if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+                {
+                    animator.CrossFade("Skill" + i, 0.1f);
+                }
             }
         }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                animator.CrossFade("Skill1", 0.1f);
+            }
+        }
+        
     }
 
     /// <summary>
-    /// 封锁玩家所有的输入内容
+    /// 解锁玩家所有的输入内容
     /// </summary>
     public void UnLockAll()
     {
@@ -325,32 +353,36 @@ public class PlayerController : MonoBehaviour
     private void PlayerEquipInput()
     {
         if (!canEquip) return;
-        if (Input.GetKeyDown(KeyCode.E))
+        if (currentState != State.Master)
         {
-            if (currentState == State.Blademan)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (hasBlade)
+                if (currentState == State.Blademan)
+                {
+                    if (hasBlade)
+                    {
+                        ifEquip = !ifEquip;
+                        animator.SetBool("Equip", ifEquip);
+                    }
+                }
+                else if (currentState == State.Swordman)
+                {
+                    ifEquip = !ifEquip;
+                    animator.SetBool("Equip", ifEquip);
+                    if (ifEquip)//A转B
+                    {
+                        animator.CrossFade("EquipSword", 0.1f);
+                    }
+                    //SetAnimationPlaySpeed(-1);
+                }
+                else if (currentState == State.Assassin)
                 {
                     ifEquip = !ifEquip;
                     animator.SetBool("Equip", ifEquip);
                 }
             }
-            else if (currentState == State.Swordman)
-            {
-                ifEquip = !ifEquip;
-                animator.SetBool("Equip", ifEquip);
-                if (ifEquip)//A转B
-                {
-                    animator.CrossFade("EquipSword", 0.1f);
-                }
-                //SetAnimationPlaySpeed(-1);
-            }
-            else if (currentState == State.Assassin)
-            {
-                ifEquip = !ifEquip;
-                animator.SetBool("Equip", ifEquip);
-            }
         }
+        
         if (Input.GetKeyDown(KeyCode.C))
         {
             animator.CrossFade("Transfiguration", 0.1f);
@@ -386,6 +418,8 @@ public class PlayerController : MonoBehaviour
                 animator.runtimeAnimatorController = masterRA;
                 ShowBall(1);
                 jumpNum = 0;
+                ifEquip = true;
+                animator.SetBool("Equip", true);
                 break;
             case State.Blademan:
                 ChangeMaterials(blademanMaterials);
@@ -409,13 +443,10 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
-        canGetPlayerInputValue = true;
-        ifEquip = false;
-        animator.SetBool("Equip", false);
     }
 
     /// <summary>
-    /// 重置所有状态下的武器
+    /// 重置所有状态
     /// </summary>
     private void ResetState()
     {
@@ -430,6 +461,10 @@ public class PlayerController : MonoBehaviour
         ShowOrHideUnEquipDaggers_N(1, false);
         ShowOrHideEquipDaggers_N(0, false);
         ShowOrHideEquipDaggers_N(1, false);
+        animator.SetFloat("MoveState", 0);
+        canGetPlayerInputValue = true;
+        ifEquip = false;
+        animator.SetBool("Equip", false);
     }
 
     private void ChangeMaterials(Material[] materials)
@@ -442,8 +477,23 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 受到伤害
-    private void TakeDamage(float damageValue, Vector3 hitPos)
+    private void TakeDamage(int damageValue, Vector3 hitPos)
     {
+        currentHP -= damageValue;
+        if (currentHP <= 0)
+        {
+            col.enabled = false;
+            rigid.isKinematic = true;
+            animator.SetBool("Die", true);
+            animator.SetLayerWeight(1, 0);
+            animator.SetLayerWeight(2, 0);
+            return;
+        }
+        if(currentHP <= HP / 3)
+        {
+            //残血
+            animator.SetLayerWeight(1, 1);
+        }
         float x = Vector3.Dot(transform.right, hitPos);
         float y = Vector3.Dot(transform.forward, hitPos - transform.position);
         animator.SetTrigger("Hit");
@@ -492,6 +542,15 @@ public class PlayerController : MonoBehaviour
         {
             return false;
         }
+    }
+    
+    /// <summary>
+    /// 用于控制武器碰撞器的显示和隐藏
+    /// </summary>
+    /// <param name="animationEvent"></param>
+    private void ShowOrHideWeaponColliders(AnimationEvent animationEvent)
+    {
+        weaponColliders[animationEvent.intParameter].enabled = System.Convert.ToBoolean(animationEvent.stringParameter);
     }
     #endregion
 
@@ -642,6 +701,7 @@ public class PlayerController : MonoBehaviour
     {
         startCombo = false;
         animator.ResetTrigger("AttackCombo");
+        UnLockAll();
     }
 
     private void PlayHitBallEffect(int isLeft)

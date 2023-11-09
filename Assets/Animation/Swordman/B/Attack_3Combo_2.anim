@@ -49840,6 +49840,20 @@ AnimationClip:
     floatParameter: -30
     intParameter: 0
     messageOptions: 0
+  - time: 0.3
+    functionName: ShowOrHideWeaponColliders
+    data: True
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6
+    functionName: ShowOrHideWeaponColliders
+    data: False
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 1.35
     functionName: EndComboState
     data: 
