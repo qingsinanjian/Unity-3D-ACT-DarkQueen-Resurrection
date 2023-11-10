@@ -74,14 +74,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Weapon"))
-        {
-            Debug.Log("受到2点伤害");
-            TakeDamage(2, other.ClosestPoint(transform.position));
-        }
-    }
     #endregion
 
     /// <summary>
@@ -477,16 +469,13 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region 受到伤害
-    private void TakeDamage(int damageValue, Vector3 hitPos)
+    public void TakeDamage(int damageValue, Vector3 hitPos)
     {
         currentHP -= damageValue;
         if (currentHP <= 0)
         {
-            col.enabled = false;
-            rigid.isKinematic = true;
+            Die();
             animator.SetBool("Die", true);
-            animator.SetLayerWeight(1, 0);
-            animator.SetLayerWeight(2, 0);
             return;
         }
         if(currentHP <= HP / 3)
@@ -543,6 +532,14 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
+
+    private void Die()
+    {
+        col.enabled = false;
+        rigid.isKinematic = true;
+        animator.SetLayerWeight(1, 0);
+        animator.SetLayerWeight(2, 0);
+    }
     
     /// <summary>
     /// 用于控制武器碰撞器的显示和隐藏
@@ -551,6 +548,51 @@ public class PlayerController : MonoBehaviour
     private void ShowOrHideWeaponColliders(AnimationEvent animationEvent)
     {
         weaponColliders[animationEvent.intParameter].enabled = System.Convert.ToBoolean(animationEvent.stringParameter);
+    }
+
+    /// <summary>
+    /// 处决
+    /// </summary>
+    /// <param name="executeID"></param>
+    public void Execute(int executeID)
+    {
+        ResetAnimatorParameters();
+        animator.CrossFade("Execute" + executeID, 0.1f);
+    }
+    /// <summary>
+    /// 被处决
+    /// </summary>
+    /// <param name="executeID"></param>
+    public void BeExectued(int executeID, Transform executorTarget)
+    {
+        Die();
+        ResetAnimatorParameters();
+        executorTarget.LookAt(transform);
+        if(executeID == 1)
+        {
+            transform.forward = executorTarget.forward;
+        }
+        else
+        {
+            transform.forward = -executorTarget.forward;
+        }
+        animator.CrossFade("Executed" + executeID, 0.1f);
+    }
+
+    public bool CanExecute()
+    {
+        return currentHP <= HP / 4;
+    }
+    /// <summary>
+    /// 重置影响处决动画执行的条件
+    /// </summary>
+    private void ResetAnimatorParameters()
+    {
+        animator.SetBool("Attack", false);
+        EndComboState();
+        //startCombo = false;
+        //animator.ResetTrigger("AttackCombo");
+        animator.ResetTrigger("Hit");
     }
     #endregion
 
