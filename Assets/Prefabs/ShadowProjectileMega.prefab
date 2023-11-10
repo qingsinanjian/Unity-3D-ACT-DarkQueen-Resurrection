@@ -5033,6 +5033,7 @@ GameObject:
   - component: {fileID: 520356795510202671}
   - component: {fileID: 520356795528877520}
   - component: {fileID: -827687738947661601}
+  - component: {fileID: -2731308867754932631}
   m_Layer: 0
   m_Name: ShadowProjectileMega
   m_TagString: Untagged
@@ -9835,6 +9836,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+--- !u!114 &-2731308867754932631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520356795528877521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72a3a4547b5a224eac2b08e2f106197, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageValue: 1
+  owner: {fileID: 0}
+  ifDestroy: 1
+  destroyTime: 0
+  effectGo: {fileID: 4694430930557289222, guid: c4251161e0b3814459496afcb2ddde63, type: 3}
 --- !u!1 &520356795528884853
 GameObject:
   m_ObjectHideFlags: 0

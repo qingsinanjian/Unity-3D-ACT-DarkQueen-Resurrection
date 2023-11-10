@@ -11,6 +11,7 @@ public class PlayerInputStateController : StateMachineBehaviour
     public bool lockEquip;
     public bool lockUseSkill;
     public bool onlyLock;
+    public bool keepLocking;
 
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -30,10 +31,13 @@ public class PlayerInputStateController : StateMachineBehaviour
     }
 
     // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (keepLocking)
+        {
+            animator.GetComponent<PlayerController>().canGetPlayerInputValue = false;
+        }
+    }
 
     // OnStateExit is called before OnStateExit is called on any state inside this state machine
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -23851,6 +23851,7 @@ GameObject:
   - component: {fileID: 19804246}
   - component: {fileID: 19985120}
   - component: {fileID: 7684247170551366276}
+  - component: {fileID: -4977433892823371846}
   m_Layer: 0
   m_Name: ShadowCleave
   m_TagString: Untagged
@@ -28744,3 +28745,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 3.58, z: 17}
   m_Center: {x: 0, y: 2.01, z: 8.58}
+--- !u!114 &-4977433892823371846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72a3a4547b5a224eac2b08e2f106197, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageValue: 4
+  owner: {fileID: 0}
+  ifDestroy: 0
+  destroyTime: 0.8

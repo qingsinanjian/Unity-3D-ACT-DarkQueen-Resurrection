@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 350981592022554113}
   - component: {fileID: 2695792205379666850}
   - component: {fileID: -4605387597841982719}
+  - component: {fileID: -5372609678384675876}
   m_Layer: 0
   m_Name: ShadowProjectileNormal
   m_TagString: Untagged
@@ -59,11 +60,28 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350981592022452769}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-5372609678384675876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350981592022452769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72a3a4547b5a224eac2b08e2f106197, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageValue: 3
+  owner: {fileID: 0}
+  ifDestroy: 0
+  destroyTime: 0
+  effectGo: {fileID: 1591769668754865618, guid: aec94e8de07d930428c40cb91f9720bb, type: 3}
 --- !u!1 &350981592022452771
 GameObject:
   m_ObjectHideFlags: 0

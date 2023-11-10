@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PlayerController : MonoBehaviour
 {
@@ -45,6 +46,13 @@ public class PlayerController : MonoBehaviour
         transfigurationEffect.gameObject.SetActive(false);
         currentHP = HP;
         col = GetComponent<Collider>();
+        if (isClone)
+        {
+            if (ifEquip)
+            {
+                animator.SetBool("Equip", true);
+            }
+        }
     }
 
     private void Update()
@@ -478,11 +486,13 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("Die", true);
             return;
         }
-        if(currentHP <= HP / 3)
-        {
-            //²ÐÑª
-            animator.SetLayerWeight(1, 1);
-        }
+        //if(currentHP <= HP / 3)
+        //{
+        //    //²ÐÑª
+        //    animator.SetLayerWeight(1, 1);
+        //}
+        //Ëæ×ÅHP¼õÉÙÖð½¥±äÎªÖØÉË×´Ì¬
+        animator.SetLayerWeight(1, (float)(HP - currentHP) / HP);
         float x = Vector3.Dot(transform.right, hitPos);
         float y = Vector3.Dot(transform.forward, hitPos - transform.position);
         animator.SetTrigger("Hit");
@@ -540,7 +550,7 @@ public class PlayerController : MonoBehaviour
         animator.SetLayerWeight(1, 0);
         animator.SetLayerWeight(2, 0);
     }
-    
+
     /// <summary>
     /// ÓÃÓÚ¿ØÖÆÎäÆ÷Åö×²Æ÷µÄÏÔÊ¾ºÍÒþ²Ø
     /// </summary>
@@ -557,6 +567,10 @@ public class PlayerController : MonoBehaviour
     public void Execute(int executeID)
     {
         ResetAnimatorParameters();
+        for (int i = 0; i < weaponColliders.Length; i++)
+        {
+            weaponColliders[i].enabled = false;
+        }
         animator.CrossFade("Execute" + executeID, 0.1f);
     }
     /// <summary>
@@ -628,14 +642,16 @@ public class PlayerController : MonoBehaviour
     #region °µÓ°Ä§·¨Çò
     private void CreateShadowProjectile(int isLeft)
     {
+        GameObject itemGo;
         if (isLeft == 1)
         {
-            Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
+            itemGo = Instantiate(shadowProjectileGo, leftHandTrans.position, transform.rotation);
         }
         else
         {
-            Instantiate(shadowProjectileGo, rightHandTrans.position, transform.rotation);
+            itemGo = Instantiate(shadowProjectileGo, rightHandTrans.position, transform.rotation);
         }
+        itemGo.GetComponent<Weapon>().owner = this;
     }
 
     private void ShowBall(int isLeft)
@@ -669,7 +685,8 @@ public class PlayerController : MonoBehaviour
     #region °µÓ°Õ¶
     private void PlaySlashParticals(float angle)
     {
-        Instantiate(slashEffectGo, transform.position + new Vector3(transform.forward.x, transform.forward.y + 1.3f, transform.forward.z * 1.3f), Quaternion.Euler(transform.rotation.eulerAngles - new Vector3(0, 0, angle)));
+        GameObject itemGo = Instantiate(slashEffectGo, transform.position + new Vector3(transform.forward.x, transform.forward.y + 1.3f, transform.forward.z * 1.3f), Quaternion.Euler(transform.rotation.eulerAngles - new Vector3(0, 0, angle)));
+        itemGo.GetComponent<Weapon>().owner = this;
     }
 
     #endregion
@@ -678,7 +695,8 @@ public class PlayerController : MonoBehaviour
 
     private void PlayCleaveParticals()
     {
-        Instantiate(cleaveEffectGo, transform.position + transform.forward, transform.rotation);
+        GameObject itemGo = Instantiate(cleaveEffectGo, transform.position + transform.forward, transform.rotation);
+        itemGo.GetComponent<Weapon>().owner = this;
     }
 
     #endregion
@@ -694,7 +712,8 @@ public class PlayerController : MonoBehaviour
     #region °µÓ°ºä»÷
     private void CreateBigShadowProjectile()
     {
-        Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
+        GameObject itemGo = Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
+        itemGo.GetComponent<Weapon>().owner = this;
     }
     #endregion
 
