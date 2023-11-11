@@ -35,7 +35,7 @@ public class PlayerInputStateController : StateMachineBehaviour
     {
         if (keepLocking)
         {
-            animator.GetComponent<PlayerController>().canGetPlayerInputValue = false;
+            animator.GetComponent<PlayerController>().ResetAnimatorParameters();
         }
     }
 

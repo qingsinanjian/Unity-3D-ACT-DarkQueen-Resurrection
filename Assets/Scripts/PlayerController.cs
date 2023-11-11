@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PlayerAttckInput()
     {
-        if (!canAttack) return;
+        if (!canAttack || currentState == State.Master) return;
         if (ifEquip)
         {
             if (Input.GetMouseButtonDown(0))
@@ -486,13 +486,13 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("Die", true);
             return;
         }
-        //if(currentHP <= HP / 3)
-        //{
-        //    //残血
-        //    animator.SetLayerWeight(1, 1);
-        //}
+        if (currentHP <= HP / 3)
+        {
+            //残血
+            animator.SetLayerWeight(1, 1);
+        }
         //随着HP减少逐渐变为重伤状态
-        animator.SetLayerWeight(1, (float)(HP - currentHP) / HP);
+        //animator.SetLayerWeight(1, (float)(HP - currentHP) / HP);
         float x = Vector3.Dot(transform.right, hitPos);
         float y = Vector3.Dot(transform.forward, hitPos - transform.position);
         animator.SetTrigger("Hit");
@@ -595,18 +595,28 @@ public class PlayerController : MonoBehaviour
 
     public bool CanExecute()
     {
-        return currentHP <= HP / 4;
+        if (isClone)
+        {
+            return currentHP <= HP / 4;
+        }
+        else
+        {
+            return false;
+        }
     }
     /// <summary>
     /// 重置影响处决动画执行的条件
     /// </summary>
-    private void ResetAnimatorParameters()
+    public void ResetAnimatorParameters()
     {
         animator.SetBool("Attack", false);
         EndComboState();
         //startCombo = false;
         //animator.ResetTrigger("AttackCombo");
         animator.ResetTrigger("Hit");
+        animator.SetFloat("InputH", 0);
+        animator.SetFloat("InputV", 0);
+        canGetPlayerInputValue = false;
     }
     #endregion
 
@@ -652,6 +662,7 @@ public class PlayerController : MonoBehaviour
             itemGo = Instantiate(shadowProjectileGo, rightHandTrans.position, transform.rotation);
         }
         itemGo.GetComponent<Weapon>().owner = this;
+        itemGo.layer = gameObject.layer;
     }
 
     private void ShowBall(int isLeft)
@@ -687,6 +698,7 @@ public class PlayerController : MonoBehaviour
     {
         GameObject itemGo = Instantiate(slashEffectGo, transform.position + new Vector3(transform.forward.x, transform.forward.y + 1.3f, transform.forward.z * 1.3f), Quaternion.Euler(transform.rotation.eulerAngles - new Vector3(0, 0, angle)));
         itemGo.GetComponent<Weapon>().owner = this;
+        itemGo.layer = gameObject.layer;
     }
 
     #endregion
@@ -697,6 +709,7 @@ public class PlayerController : MonoBehaviour
     {
         GameObject itemGo = Instantiate(cleaveEffectGo, transform.position + transform.forward, transform.rotation);
         itemGo.GetComponent<Weapon>().owner = this;
+        itemGo.layer = gameObject.layer;
     }
 
     #endregion
@@ -714,6 +727,7 @@ public class PlayerController : MonoBehaviour
     {
         GameObject itemGo = Instantiate(bigShadowProjectileGo, leftHandTrans.position, transform.rotation);
         itemGo.GetComponent<Weapon>().owner = this;
+        itemGo.layer = gameObject.layer;
     }
     #endregion
 
